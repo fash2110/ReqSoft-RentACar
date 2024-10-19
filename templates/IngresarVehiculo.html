@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar Vehículo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f1fb;
+            color: #3b0256;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #3b0256;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .full-width {
+            grid-column: 1 / 3;
+        }
+        button {
+            background-color: #8c4d9e;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            grid-column: 1 / 3;
+        }
+        button:hover {
+            background-color: #7b3f88;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ingresar vehículo</h1>
+    <form action="/ingresar" method="POST">
+        <div>
+            <label for="marca">Marca</label>
+            <input type="text" id="marca" name="marca">
+        </div>
+        <div>
+            <label for="modelo">Modelo</label>
+            <input type="text" id="modelo" name="modelo">
+        </div>
+        <div>
+            <label for="anio">Año</label>
+            <input type="number" id="anio" name="anio">
+        </div>
+        <div>
+            <label for="placa">Placa</label>
+            <input type="text" id="placa" name="placa">
+        </div>
+        <div>
+            <label for="color">Color</label>
+            <input type="text" id="color" name="color">
+        </div>
+        <div>
+            <label for="kilometraje">Kilometraje</label>
+            <input type="number" id="kilometraje" name="kilometraje">
+        </div>
+        <div>
+            <label for="pasajeros">Pasajeros</label>
+            <input type="number" id="pasajeros" name="pasajeros">
+        </div>
+        <div>
+            <label for="transmision">Transmisión</label>
+            <input type="text" id="transmision" name="transmision">
+        </div>
+        <div>
+            <label for="combustible">Combustible</label>
+            <input type="text" id="combustible" name="combustible">
+        </div>
+        <div>
+            <label for="detalles">Detalles</label>
+            <input type="text" id="detalles" name="detalles">
+        </div>
+        <div class="full-width">
+            <button type="submit">Ingresar vehículo</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
