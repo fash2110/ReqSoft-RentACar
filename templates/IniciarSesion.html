@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payara Rent a Car - Iniciar Sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f3f8;
+            color: #3b0256;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #3b0256;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4d278e;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #3b206e;
+        }
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            gap: 5px;
+        }
+        a {
+            text-decoration: none;
+            font-size: 14px;
+            color: #6c757d;
+            display: block;
+            margin-top: 20px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Payara Rent a Car</h1>
+    <p>Por favor inicie sesión para continuar</p>
+    <form action="/login" method="POST">
+        <div>
+            <input type="text" id="usuario" name="usuario" placeholder="Usuario*" required>
+        </div>
+        <div>
+            <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña*" required>
+        </div>
+        <div class="remember-me">
+            <input type="checkbox" id="recordarme" name="recordarme">
+            <label for="recordarme">Recordarme</label>
+        </div>
+        <button type="submit">ACCEDER</button>
+    </form>
+    <a href="#">¿Tiene problemas para acceder?</a>
+    <footer>
+        ©Este sitio es protegido por <a href="#">Términos & Condiciones</a>
+    </footer>
+</div>
+
+</body>
+</html>

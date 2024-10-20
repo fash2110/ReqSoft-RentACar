@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Vehículos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <!-- Barra lateral -->
+    <div class="sidebar">
+        <button class="menu-toggle">≡</button>
+
+        <!-- Botón de "+" modificado para ser un enlace -->
+	<a href="{{ url_for('IngresarVehiculo') }}">
+    	    <div class="add-button">+</div>
+	</a>
+
+        <ul>
+            <li class="menu-item">
+                <i class="fa fa-car"></i>
+                <span class="menu-text">Vehículos</span>
+            </li>
+            <li class="menu-item">
+                <i class="fa fa-file"></i>
+                <span class="menu-text">Reportes</span>
+            </li>
+            <li class="menu-item">
+                <i class="fa fa-star"></i>
+                <span class="menu-text">Vendidos</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Sección central -->
+    <div class="content">
+        <div class="header">
+            <input type="text" id="search" placeholder="Buscar vehículo">
+        </div>
+
+        <div class="vehicle-list">
+            {% for vehicle in vehicles %}
+            <div class="vehicle-item">
+                <div>{{ vehicle.brand }} {{ vehicle.model }}</div>
+                <div style="display: flex; align-items: center;">
+                    <select onchange="changeStatus({{ vehicle.id }}, this.value)">
+                        <option value="Disponible" {% if vehicle.status == 'Disponible' %}selected{% endif %}>Disponible</option>
+                        <option value="Mantenimiento" {% if vehicle.status == 'Mantenimiento' %}selected{% endif %}>Mantenimiento</option>
+                        <option value="Alquiler" {% if vehicle.status == 'Alquiler' %}selected{% endif %}>Alquiler</option>
+                    </select>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+function changeStatus(vehicleId, newStatus) {
+    $.ajax({
+        url: "/update_status",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ vehicle_id: vehicleId, new_status: newStatus }),
+        success: function(response) {
+            if (response.success) {
+                console.log('Estado actualizado');
+            }
+        }
+    });
+}
+</script>
+
+</body>
+</html>
