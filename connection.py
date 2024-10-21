@@ -3,7 +3,7 @@ import pyodbc
 def get_connection():
     try:
         connection = pyodbc.connect(
-            #AQUI VAN LOS DATOS DEL SERVIDOR (EN ESTE CASO ES UN SERVIDOR LOCAL)
+            # AQUI VAN LOS DATOS DEL SERVIDOR (EN ESTE CASO ES UN SERVIDOR LOCAL)
             'DRIVER={SQL Server};'
             'SERVER=CHACO-LAPTOP\SQLEXPRESS;'
             'DATABASE=RentACar;'

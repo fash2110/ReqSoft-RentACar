@@ -4,6 +4,7 @@ from connection import get_connection
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Cambia esto por una clave más segura en producción
 
+
 @app.route('/')
 def form():
     return render_template('IniciarSesion.html')
