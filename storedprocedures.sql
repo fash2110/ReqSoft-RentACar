@@ -588,7 +588,7 @@ BEGIN
 END;
 GO
 
---******************************CALENDARIO******************************
+-- ******************************CALENDARIO******************************
 
 CREATE PROCEDURE dbo.Calendario
     @infecha DATE,
