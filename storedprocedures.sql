@@ -26,7 +26,7 @@ BEGIN
 
         IF @contrasenatabla != @incontrasena
         BEGIN
-            SET @outresult = 2;  -- CONTRASE�A INCORRECTA
+            SET @outresult = 2;  -- CONTRASEÑA INCORRECTA
             RETURN;
         END
 
@@ -38,11 +38,11 @@ BEGIN
     END CATCH
 END;
 GO
--- *********************  GESTION VEH�CULOS **************************
+-- *********************  GESTION VEHÍCULOS **************************
 
 
 
--- INSERTAR VEH�CULO
+-- INSERTAR VEHÍCULO
 
 CREATE PROCEDURE dbo.InsertarVehiculo
 	@inplaca VARCHAR(6),
@@ -95,7 +95,7 @@ BEGIN
 END;
 GO
 
--- MODIFICAR VEH�CULO
+-- MODIFICAR VEHÍCULO
 
 CREATE PROCEDURE dbo.ModificarVehiculo
 	@inplaca VARCHAR(6),
@@ -116,7 +116,7 @@ BEGIN
 
 		SET @outresult = 0;
 
-		-- SEGUN FIGMA, FALTA A�ADIR TANQUE, CILINDRAJE COLOR EXTERIOR E INTERIOR, PASAJEROS 				
+		-- SEGUN FIGMA, FALTA AÑADIR TANQUE, CILINDRAJE COLOR EXTERIOR E INTERIOR, PASAJEROS 				
 				
 		UPDATE dbo.Vehiculos
 			SET color = @incolor,
@@ -134,7 +134,7 @@ BEGIN
 	END CATCH
 END;
 GO
--- ELIMINAR VEH�CULO
+-- ELIMINAR VEHÍCULO
 
 CREATE PROCEDURE dbo.EliminarVehiculo
 	@inplaca VARCHAR(6),
@@ -206,7 +206,7 @@ BEGIN
     END CATCH
 END;
 GO
--- LISTA DE VEH�CULOS (P�gina principal)
+-- LISTA DE VEHÍCULOS (Página principal)
 
 CREATE PROCEDURE dbo.ListarVehiculos
 	@outresult INT OUTPUT
@@ -320,7 +320,7 @@ BEGIN
     END CATCH
 END;
 GO
--- LISTAR ALQUILERES (P�gina principal Alquileres)
+-- LISTAR ALQUILERES (Página principal Alquileres)
 
 CREATE PROCEDURE dbo.ListarAlquileres
     @outresult INT OUTPUT
@@ -513,6 +513,123 @@ BEGIN
 
         SET @outresult = ERROR_NUMBER();
 
+    END CATCH
+END;
+GO
+	
+-- **************************** REPORTES *********************************
+
+CREATE PROCEDURE dbo.ConsultarReportes
+    @infecha DATE,
+    @outresult INT OUTPUT
+
+AS
+BEGIN
+    BEGIN TRY
+
+        SET @outresult = 0;
+
+
+        SELECT 
+            'Mantenimiento' AS Descripcion, 
+            (monto * -1) AS Monto,  -- GASTO DE MANTENIMIENTO
+            fecha
+        FROM dbo.Mantenimientos
+        WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
+
+        UNION ALL
+
+        SELECT 
+            'Alquiler' AS Descripcion, 
+            monto AS Monto,  -- COBRO DE ALQUILER
+            fechainicio AS fecha
+        FROM dbo.Alquileres
+        WHERE MONTH(fechainicio) = MONTH(@infecha) AND YEAR(fechainicio) = YEAR(@infecha)
+
+        UNION ALL
+
+        SELECT 
+            'Riteve' AS Descripcion, 
+            (monto * -1) AS Monto,  -- GASTO DE REVISION RITEVE
+            fecha
+        FROM dbo.Riteve
+        WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
+        
+        ORDER BY fecha;
+
+        -- TOTAL
+        SELECT SUM(monto) AS TotalMonto
+        FROM (
+            SELECT 
+                monto * -1 AS monto
+            FROM dbo.Mantenimientos
+            WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
+
+            UNION ALL
+
+            SELECT 
+                monto AS monto
+            FROM dbo.Alquileres
+            WHERE MONTH(fechainicio) = MONTH(@infecha) AND YEAR(fechainicio) = YEAR(@infecha)
+
+            UNION ALL
+
+            SELECT 
+                monto * -1 AS monto
+            FROM dbo.Riteve
+            WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
+
+        ) AS Reportes;
+
+    END TRY
+    BEGIN CATCH
+        SET @outresult = ERROR_NUMBER();
+    END CATCH
+END;
+GO
+
+--******************************CALENDARIO******************************
+
+CREATE PROCEDURE dbo.Calendario
+    @infecha DATE,
+    @outresult INT OUTPUT
+
+AS
+BEGIN
+    BEGIN TRY
+
+        SET @outresult = 0;
+
+        SELECT 
+            fecha AS Fecha, 
+            'Mantenimiento' AS Descripcion, 
+            CONCAT('Mantenimiento - ', descripcion) AS Detalle
+        FROM dbo.Mantenimientos
+        WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
+
+        UNION ALL
+
+        SELECT 
+            fechainicio AS Fecha, 
+            'Alquiler' AS Descripcion, 
+            CONCAT('Alquiler - ', idVehiculo, ' - Cliente') AS Detalle
+        FROM dbo.Alquileres
+        WHERE MONTH(fechainicio) = MONTH(@infecha) AND YEAR(fechainicio) = YEAR(@infecha)
+
+        UNION ALL
+
+        SELECT 
+            fecha AS Fecha, 
+            'Riteve' AS Descripcion, 
+            'Riteve - Revisión técnica' AS Detalle
+        FROM dbo.Riteve
+        WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
+
+        ORDER BY Fecha;
+
+    END TRY
+    BEGIN CATCH
+        SET @outresult = ERROR_NUMBER();
     END CATCH
 END;
 GO
