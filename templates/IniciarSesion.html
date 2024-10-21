@@ -99,6 +99,18 @@
         <button type="submit">ACCEDER</button>
     </form>
     <a href="#">¿Tiene problemas para acceder?</a>
+
+    <!-- Para mostrar los mensajes flash -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul style="color: red;">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
     <footer>
         ©Este sitio es protegido por <a href="#">Términos & Condiciones</a>
     </footer>
