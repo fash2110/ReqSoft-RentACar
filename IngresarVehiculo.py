@@ -5,7 +5,7 @@ app = Flask(__name__)
 # Ruta para mostrar el formulario HTML
 @app.route('/')
 def form():
-    return render_template('IngresarVehiculo.html')  # Asegúrate de que el archivo HTML se llame 'formulario.html'
+    return render_template('IngresarVehiculo.html')
 
 # Ruta para procesar los datos del formulario
 @app.route('/ingresar', methods=['POST'])
@@ -30,3 +30,4 @@ def ingresar_vehiculo():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
