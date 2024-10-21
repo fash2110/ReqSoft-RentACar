@@ -15,7 +15,7 @@ vehicles = [
 ]
 
 @app.route('/')
-def index():
+def Inicio():
     return render_template('Inicio.html', vehicles=vehicles)
 
 # Ruta para la pantalla de "Ingresar Vehículo"
@@ -23,8 +23,13 @@ def index():
 def IngresarVehiculo():
     return render_template('IngresarVehiculo.html')
 
-@app.route('/update_status', methods=['POST'])
-def update_status():
+# Ruta para la pantalla de "reportes"
+@app.route('/reportes')
+def reportes():
+    return render_template('reportes.html')
+
+@app.route('/Pantalla', methods=['POST'])
+def PantallaPrincipal():
     data = request.json
     vehicle_id = data.get('vehicle_id')
     new_status = data.get('new_status')
@@ -39,3 +44,4 @@ def update_status():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
