@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Vehículo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f0f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 80px;
+            background-color: #f6f0f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+        .sidebar button {
+            background-color: #f6f0f5;
+            border: none;
+            margin-bottom: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #4c1c84;
+            padding: 10px;
+        }
+        .sidebar button:hover {
+            background-color: #e0d5e5;
+            border-radius: 8px;
+        }
+        .hamburger-menu {
+            font-size: 30px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .plus-button {
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #fdf7ff;
+            border-radius: 12px;
+            margin: 20px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+        }
+        .header-left h1 {
+            color: #4c1c84;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .header-left div {
+            font-size: 18px;
+            margin-top: -5px;
+            color: #4c1c84;
+        }
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 20px;
+        }
+        .nav-tabs a {
+            text-decoration: none;
+            font-size: 18px;
+            color: #4c1c84;
+            padding: 5px 10px;
+            background-color: #f6f0f5;
+            border-radius: 8px;
+        }
+        .nav-tabs a:hover {
+            background-color: #e0d5e5;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .actions button {
+            background-color: #f6f0f5;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #4c1c84;
+            padding: 5px;
+        }
+        .actions button:hover {
+            background-color: #e0d5e5;
+            border-radius: 8px;
+        }
+        .status-text {
+            margin-top: 5px;
+            font-size: 18px;
+            color: #4c1c84;
+        }
+        .vehicle-details {
+            margin-top: 20px;
+        }
+        .vehicle-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+        .vehicle-info-right {
+            margin-left: -120px;
+        }
+        input {
+            border: none;
+            background-color: #fdf7ff;
+            font-size: 16px;
+            color: #4c1c84;
+            width: auto;
+        }
+        input[readonly] {
+            border-bottom: none;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-bottom: 1px solid #4c1c84;
+        }
+    </style>
+    <script>
+        function toggleEditMode() {
+            const inputs = document.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                input.toggleAttribute('readonly');
+            });
+        }
+    </script>
+</head>
+<body>
+    <!-- Barra lateral -->
+    <div class="sidebar">
+        <div class="hamburger-menu">☰</div>
+        <button class="plus-button">+</button>
+        <button>Vehículos</button>
+        <button>Reportes</button>
+        <button>Vendidos</button>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <form method="POST">
+            <div class="header">
+                <div class="header-left">
+                    <h1>Toyota Camry</h1>
+                    <div>2020 - Sedan</div>
+                </div>
+                <div class="header-right">
+                    <div class="actions">
+                        <button type="button" onclick="toggleEditMode()">✏️</button>
+                        <button type="submit" name="action" value="delete">🗑️</button>
+                    </div>
+                    <div class="status-text">Disponible</div>
+                </div>
+            </div>
+
+            <div class="nav-tabs">
+                <a href="#detalles">Detalles</a>
+                <a href="#mantenimiento">Mantenimiento</a>
+                <a href="#alquiler">Alquiler</a>
+            </div>
+
+            <div class="vehicle-details">
+                <div class="vehicle-info">
+                    <span>Placa: <input type="text" name="placa" value="AAA-111" readonly></span>
+                    <span class="vehicle-info-right">Última revisión: <input type="text" name="ultima_revision" value="01/01/2001" readonly></span>
+                </div>
+                <div class="vehicle-info">
+                    <span>Transmisión: <input type="text" name="transmision" value="Automático/Dual" readonly></span>
+                </div>
+                <div class="vehicle-info">
+                    <span>Combustible: <input type="text" name="combustible" value="Gasolina" readonly></span>
+                    <span class="vehicle-info-right">Capacidad del tanque: <input type="text" name="capacidad_tanque" value="24 Litros" readonly></span>
+                </div>
+                <div class="vehicle-info">
+                    <span>Cilindrada: <input type="text" name="cilindrada" value="2500CC" readonly></span>
+                </div>
+                <div class="vehicle-info">
+                    <span>Exterior: <input type="text" name="exterior" value="Gris" readonly></span>
+                    <span class="vehicle-info-right">Interior: <input type="text" name="interior" value="Café" readonly></span>
+                </div>
+                <div class="vehicle-info">
+                    <span>Pasajeros: <input type="text" name="pasajeros" value="5" readonly></span>
+                    <span class="vehicle-info-right">Puertas: <input type="text" name="puertas" value="5" readonly></span>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
