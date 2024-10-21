@@ -14,7 +14,7 @@
     <div class="sidebar">
         <button class="menu-toggle">≡</button>
 
-        <!-- Botón de "+" modificado para ser un enlace -->
+	<!-- Botón de "+" modificado para ser un enlace -->
 	<a href="{{ url_for('IngresarVehiculo') }}">
     	    <div class="add-button">+</div>
 	</a>
@@ -26,7 +26,9 @@
             </li>
             <li class="menu-item">
                 <i class="fa fa-file"></i>
-                <span class="menu-text">Reportes</span>
+		<a href="{{ url_for('reportes') }}">
+                    <span class="menu-text">Reportes</span>
+		</a>
             </li>
             <li class="menu-item">
                 <i class="fa fa-star"></i>
