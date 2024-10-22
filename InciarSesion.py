@@ -98,7 +98,6 @@ def detalles_vehiculo(id):
     finally:
         connection.close()
 
-# Ruta para mostrar el formulario de modificación de un vehículo
 @app.route('/modificar/<id>', methods=['GET', 'POST'])
 def modificar_vehiculo(id):
     if request.method == 'POST':
@@ -135,13 +134,11 @@ def modificar_vehiculo(id):
             connection.commit()
 
             return redirect(url_for('detalles_vehiculo', id=id))
-
         except Exception as e:
             flash(str(e))
             return redirect(url_for('detalles_vehiculo', id=id))
         finally:
             connection.close()
-
     else:
         try:
 
@@ -161,6 +158,26 @@ def modificar_vehiculo(id):
             return redirect(url_for('Inicio'))
         finally:
             connection.close()
+
+
+@app.route('/vehiculos/<id>/eliminar', methods=['POST'])
+def eliminar_vehiculo(id):
+
+    try:
+
+        # CONEXION A LA BASE DE DATOS
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute("EXEC EliminarVehiculo @inplaca = ?", (id,))
+        connection.commit()
+
+    except Exception as e:
+        flash(str(e))
+    finally:
+        connection.close()
+
+    return redirect(url_for('Inicio'))
+
 
 @app.route('/reportes')
 def reportes():
