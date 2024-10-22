@@ -137,36 +137,30 @@ GO
 -- CONSULTA VEHICULO
 
 CREATE PROCEDURE dbo.ConsultaVehiculo
-	@inplaca VARCHAR(6)
-
+    @inplaca VARCHAR(6)
 AS
 BEGIN
-    BEGIN TRY
-        IF EXISTS (SELECT 1 FROM dbo.Vehiculos WHERE placa = @inplaca)
-        BEGIN
-            SELECT placa,
-				modelo,
-				marca,
-				anno,
-				color,
-				idTipo,
-				idCombustible,
-				idTransmision,
-				idEstado,
-				descripcion
-            FROM dbo.Vehiculos
-            WHERE placa = @inplaca;
-        END
-        ELSE
-        BEGIN
-            RETURN 1;  -- NO EXISTE
-        END
-    END TRY
-    BEGIN CATCH
-        RETURN ERROR_NUMBER();
-    END CATCH
+    SELECT 
+        V.placa, 
+        V.modelo, 
+        V.marca, 
+        V.anno, 
+        V.color,
+		-- NOMBRES DE IDs
+        T.nombre AS nombre_tipo,
+        C.nombre AS nombre_combustible,
+        TR.nombre AS nombre_transmision,
+        E.nombre AS nombre_estado,
+        V.descripcion
+    FROM Vehiculos V
+    JOIN Tipos T ON V.idTipo = T.id
+    JOIN Combustibles C ON V.idCombustible = C.id
+    JOIN Transmision TR ON V.idTransmision = TR.id
+    JOIN Estados E ON V.idEstado = E.id
+    WHERE V.placa = @inplaca;
 END;
 GO
+
 
 -- LISTA DE VEHÍCULOS
 
