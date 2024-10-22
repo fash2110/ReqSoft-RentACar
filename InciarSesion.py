@@ -76,6 +76,7 @@ def IngresarVehiculo():
 @app.route('/detalles/<id>')
 def detalles_vehiculo(id):
     try:
+
         #CONEXION CON BASE DE DATOS
         connection = get_connection()
         cursor = connection.cursor()
