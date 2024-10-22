@@ -72,9 +72,37 @@ def Inicio():
 def IngresarVehiculo():
     return render_template('Inicio.html', usuario=session['usuario'])
 
+
+@app.route('/detalles/<id>')
+def detalles_vehiculo(id):
+    try:
+        #CONEXION CON BASE DE DATOS
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # LLAMADO A STORED PROCEDURE
+        cursor.execute("{CALL dbo.ConsultaVehiculo(?)}", (id,))
+        vehiculo = cursor.fetchone()
+
+        # VALIDACIÓN DE EXISTENCIA DE VEHÍCULO
+        if vehiculo:
+            return render_template('Vehiculosdetalles.html', vehiculo=vehiculo)
+        else:
+            flash('No se encontraron detalles para este vehículo.')
+            return redirect(url_for('Inicio'))
+
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for('Inicio'))
+    finally:
+        connection.close()
+
+
+
 @app.route('/reportes')
 def reportes():
     return render_template('reportes.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
