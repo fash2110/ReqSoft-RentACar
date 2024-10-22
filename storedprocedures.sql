@@ -1,12 +1,10 @@
-
 -- **************************** LOGIN *********************************
 
 -- VALIDAR EL USUARIO
 
 CREATE PROCEDURE dbo.ValidarUsuario
     @innombre VARCHAR(64),
-    @incontrasena VARCHAR(64),
-    @outresult INT OUTPUT
+    @incontrasena VARCHAR(64)
 
 AS
 BEGIN
@@ -20,27 +18,24 @@ BEGIN
 
         IF @contrasenatabla IS NULL
         BEGIN
-            SET @outresult = 1;  -- NO EXISTE
-            RETURN;
+            RETURN 1;  -- NO EXISTE
         END
 
         IF @contrasenatabla != @incontrasena
         BEGIN
-            SET @outresult = 2;  -- CONTRASEÑA INCORRECTA
-            RETURN;
+            RETURN 2;  -- CONTRASEÑA INCORRECTA
         END
 
-        SET @outresult = 0;
+        RETURN 0;
 
     END TRY
     BEGIN CATCH
-        SET @outresult = ERROR_NUMBER();
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- *********************  GESTION VEHÍCULOS **************************
-
-
 
 -- INSERTAR VEHÍCULO
 
@@ -48,21 +43,18 @@ CREATE PROCEDURE dbo.InsertarVehiculo
 	@inplaca VARCHAR(6),
 	@inmodelo VARCHAR(16),
 	@inmarca VARCHAR(32),
-	@inanno date,
+	@inanno DATE,
 	@incolor VARCHAR(32),
 	@inidTipo INT,
 	@inidCombustible INT,
 	@inidTransmision INT,
 	@inidEstado INT,
-	@indescripcion VARCHAR(256),
-	@outresult INT OUTPUT
+	@indescripcion VARCHAR(256)
 
 AS
 BEGIN
 	BEGIN TRY
 		
-		SET @outresult = 0;
-
 		INSERT INTO dbo.Vehiculos(
 			placa,
 			modelo,
@@ -86,12 +78,10 @@ BEGIN
 			@inidEstado,
 			@indescripcion);
 
-		END TRY
-		BEGIN CATCH
-
-			SET @outresult = ERROR_NUMBER();
-
-		END CATCH
+	END TRY
+	BEGIN CATCH
+		RETURN ERROR_NUMBER();
+	END CATCH
 END;
 GO
 
@@ -101,23 +91,17 @@ CREATE PROCEDURE dbo.ModificarVehiculo
 	@inplaca VARCHAR(6),
 	@inmodelo VARCHAR(16),
 	@inmarca VARCHAR(32),
-	@inanno date,
+	@inanno DATE,
 	@incolor VARCHAR(32),
 	@inidTipo INT,
 	@inidCombustible INT,
 	@inidTransmision INT,
 	@inidEstado INT,
-	@indescripcion VARCHAR(256),
-	@outresult INT OUTPUT
+	@indescripcion VARCHAR(256)
 
 AS
 BEGIN
 	BEGIN TRY
-
-		SET @outresult = 0;
-
-		-- SEGUN FIGMA, FALTA AÑADIR TANQUE, CILINDRAJE COLOR EXTERIOR E INTERIOR, PASAJEROS 				
-				
 		UPDATE dbo.Vehiculos
 			SET color = @incolor,
 				idTipo = @inidTipo,
@@ -128,50 +112,38 @@ BEGIN
 			WHERE placa = @inplaca;
 	END TRY
 	BEGIN CATCH
-	
-		SET @outresult = ERROR_NUMBER();
-	
+		RETURN ERROR_NUMBER();
 	END CATCH
 END;
 GO
+
 -- ELIMINAR VEHÍCULO
 
 CREATE PROCEDURE dbo.EliminarVehiculo
-	@inplaca VARCHAR(6),
-	@outresult INT OUTPUT
+	@inplaca VARCHAR(6)
 
 AS
 BEGIN
 	BEGIN TRY
-
-		SET @outresult = 0;
-				
 		DELETE FROM dbo.Vehiculos
 		WHERE placa = @inplaca;
-		
 	END TRY
 	BEGIN CATCH
-	
-		SET @outresult = ERROR_NUMBER();
-	
+		RETURN ERROR_NUMBER();
 	END CATCH
 END;
 GO
--- CONSULTA VEHICULO (detalles / modificar)
+
+-- CONSULTA VEHICULO
 
 CREATE PROCEDURE dbo.ConsultaVehiculo
-	@inplaca VARCHAR(6),
-	@outresult INT OUTPUT
+	@inplaca VARCHAR(6)
 
 AS
 BEGIN
     BEGIN TRY
-		
-        SET @outresult = 0;
-
         IF EXISTS (SELECT 1 FROM dbo.Vehiculos WHERE placa = @inplaca)
         BEGIN
-
             SELECT placa,
 				modelo,
 				marca,
@@ -184,49 +156,33 @@ BEGIN
 				descripcion
             FROM dbo.Vehiculos
             WHERE placa = @inplaca;
-
-			-- FALTAN FIGMA
-			-- tanque,
-			-- cilindraje,
-			-- colorExterior,
-			-- colorinterior,
-			-- Pasajeros
-
         END
         ELSE
         BEGIN
-            SET @outresult = 1;  -- NO EXISTE
+            RETURN 1;  -- NO EXISTE
         END
-
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
--- LISTA DE VEHÍCULOS (Página principal)
+
+-- LISTA DE VEHÍCULOS
 
 CREATE PROCEDURE dbo.ListarVehiculos
-	@outresult INT OUTPUT
 
 AS
 BEGIN
 	BEGIN TRY
-
-		SET @outresult = 0;
-
-		SELECT * FROM dbo.Vehiculos
-
+		SELECT * FROM dbo.Vehiculos;
 	END TRY
 	BEGIN CATCH
-
-	    SET @outresult = ERROR_NUMBER();
-
+		RETURN ERROR_NUMBER();
 	END CATCH
-END
+END;
 GO
+
 -- *********************  GESTION ALQUILERES **************************
 
 -- INSERTAR ALQUILER
@@ -236,34 +192,20 @@ CREATE PROCEDURE dbo.InsertarAlquiler
     @infechaInicio DATETIME,
     @infechaFin DATETIME,
     @incliente VARCHAR(64),
-    @inmonto FLOAT,
-    @outresult INT OUTPUT
+    @inmonto FLOAT
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
-        INSERT INTO dbo.Alquileres(idVehiculo,
-								fechaInicio,
-								fechaFin,
-								cliente,
-								monto)
-        VALUES (@inidVehiculo,
-		@infechaInicio,
-		@infechaFin,
-		@incliente,
-		@inmonto);
-
+        INSERT INTO dbo.Alquileres(idVehiculo, fechaInicio, fechaFin, cliente, monto)
+        VALUES (@inidVehiculo, @infechaInicio, @infechaFin, @incliente, @inmonto);
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- MODIFICAR ALQUILER
 
 CREATE PROCEDURE dbo.ModificarAlquiler
@@ -272,15 +214,11 @@ CREATE PROCEDURE dbo.ModificarAlquiler
     @infechaInicio DATETIME,
     @infechaFin DATETIME,
     @incliente VARCHAR(64),
-    @inmonto FLOAT,
-    @outresult INT OUTPUT
+    @inmonto FLOAT
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
         UPDATE dbo.Alquileres
         SET idVehiculo = @inidVehiculo,
             fechaInicio = @infechaInicio,
@@ -288,125 +226,90 @@ BEGIN
             cliente = @incliente,
             monto = @inmonto
         WHERE id = @inidalquiler;
-
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- ELIMINAR ALQUILER
 
 CREATE PROCEDURE dbo.EliminarAlquiler
-    @inidalquiler INT,
-    @outresult INT OUTPUT
+    @inidalquiler INT
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
         DELETE FROM dbo.Alquileres
         WHERE id = @inidalquiler;
-
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
--- LISTAR ALQUILERES (Página principal Alquileres)
+
+-- LISTAR ALQUILERES
 
 CREATE PROCEDURE dbo.ListarAlquileres
-    @outresult INT OUTPUT
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
         SELECT * FROM dbo.Alquileres;
-
     END TRY
     BEGIN CATCH
-        SET @outresult = ERROR_NUMBER();
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- CONSULTAR ALQUILER
 
 CREATE PROCEDURE dbo.ConsultarAlquiler
-    @inidalquiler INT,
-    @outresult INT OUTPUT
+    @inidalquiler INT
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
         IF EXISTS (SELECT 1 FROM dbo.Alquileres WHERE id = @inidalquiler)
         BEGIN
-
-            SELECT idVehiculo,
-				fechaInicio,
-				fechaFin,
-				cliente,
-				monto
+            SELECT idVehiculo, fechaInicio, fechaFin, cliente, monto
             FROM dbo.Alquileres
             WHERE id = @inidalquiler;
         END
         ELSE
         BEGIN
-            SET @outresult = 1;  -- NO EXISTE
+            RETURN 1;  -- NO EXISTE
         END
-
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- *********************  GESTION MANTENIMIENTOS **************************
 
 CREATE PROCEDURE dbo.InsertarMantenimiento
     @inidVehiculo VARCHAR(6),
     @infecha DATETIME,
     @inmonto FLOAT,
-    @indescripcion VARCHAR(64),
-    @outresult INT OUTPUT
+    @indescripcion VARCHAR(64)
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
-        INSERT INTO dbo.Mantenimientos(idVehiculo,
-										fecha,
-										monto,
-										descripcion)
-        VALUES (@inidVehiculo,
-				@infecha,
-				@inmonto,
-				@indescripcion);
-
+        INSERT INTO dbo.Mantenimientos(idVehiculo, fecha, monto, descripcion)
+        VALUES (@inidVehiculo, @infecha, @inmonto, @indescripcion);
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- MODIFICAR MANTENIMIENTO
 
 CREATE PROCEDURE dbo.ModificarMantenimiento
@@ -414,192 +317,156 @@ CREATE PROCEDURE dbo.ModificarMantenimiento
     @inidVehiculo VARCHAR(6),
     @infecha DATETIME,
     @inmonto FLOAT,
-    @indescripcion VARCHAR(64),
-    @outresult INT OUTPUT
+    @indescripcion VARCHAR(64)
+
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
         UPDATE dbo.Mantenimientos
         SET idVehiculo = @inidVehiculo,
             fecha = @infecha,
             monto = @inmonto,
             descripcion = @indescripcion
         WHERE id = @inidmantenimiento;
-
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- ELIMINAR MANTENIMIENTO
 
 CREATE PROCEDURE dbo.EliminarMantenimiento
-    @inidmantenimiento INT,
-    @outresult INT OUTPUT
+    @inidmantenimiento INT
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
         DELETE FROM dbo.Mantenimientos
         WHERE id = @inidmantenimiento;
-
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- LISTAR MANTENIMIENTOS
 
 CREATE PROCEDURE dbo.ListarMantenimientos
-    @outresult INT OUTPUT
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
         SELECT * FROM dbo.Mantenimientos;
-
     END TRY
     BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
+
 -- CONSULTAR MANTENIMIENTO
 
 CREATE PROCEDURE dbo.ConsultarMantenimiento
-    @inidmantenimiento INT,
-    @outresult INT OUTPUT
+    @inidmantenimiento INT
 
 AS
 BEGIN
-    BEGIN TRY
-
-        SET @outresult = 0;
-
+BEGIN TRY
         IF EXISTS (SELECT 1 FROM dbo.Mantenimientos WHERE id = @inidmantenimiento)
         BEGIN
-
             SELECT idVehiculo, fecha, monto, descripcion
             FROM dbo.Mantenimientos
-            WHERE id = @inidmantenimiento;
-
-        END
+            WHERE id = @inidmantenimiento
+	END
         ELSE
         BEGIN
-
-            SET @outresult = 1;  -- NO EXISTE
-
+	        RETURN;
         END
-
-    END TRY
-    BEGIN CATCH
-
-        SET @outresult = ERROR_NUMBER();
-
-    END CATCH
+END TRY
+BEGIN CATCH
+	        RETURN ERROR_NUMBER();
+END CATCH
 END;
 GO
-	
+
+
 -- **************************** REPORTES *********************************
 
 CREATE PROCEDURE dbo.ConsultarReportes
-    @infecha DATE,
-    @outresult INT OUTPUT
+    @infecha DATE
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
-
+        -- Seleccionar mantenimientos del mes con montos negativos
         SELECT 
             'Mantenimiento' AS Descripcion, 
-            (monto * -1) AS Monto,  -- GASTO DE MANTENIMIENTO
+            (monto * -1) AS Monto,  
             fecha
         FROM dbo.Mantenimientos
         WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
 
         UNION ALL
 
+        -- Seleccionar alquileres del mes con montos positivos
         SELECT 
             'Alquiler' AS Descripcion, 
-            monto AS Monto,  -- COBRO DE ALQUILER
+            monto AS Monto,  
             fechainicio AS fecha
         FROM dbo.Alquileres
         WHERE MONTH(fechainicio) = MONTH(@infecha) AND YEAR(fechainicio) = YEAR(@infecha)
 
         UNION ALL
 
+        -- Seleccionar gastos de Riteve con montos negativos
         SELECT 
             'Riteve' AS Descripcion, 
-            (monto * -1) AS Monto,  -- GASTO DE REVISION RITEVE
+            (monto * -1) AS Monto,  
             fecha
         FROM dbo.Riteve
         WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
-        
+
         ORDER BY fecha;
 
-        -- TOTAL
+        -- Total de los montos (incluye tanto mantenimientos como alquileres y riteve)
         SELECT SUM(monto) AS TotalMonto
         FROM (
-            SELECT 
-                monto * -1 AS monto
+            SELECT monto * -1 AS monto
             FROM dbo.Mantenimientos
             WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
 
             UNION ALL
 
-            SELECT 
-                monto AS monto
+            SELECT monto AS monto
             FROM dbo.Alquileres
             WHERE MONTH(fechainicio) = MONTH(@infecha) AND YEAR(fechainicio) = YEAR(@infecha)
 
             UNION ALL
 
-            SELECT 
-                monto * -1 AS monto
+            SELECT monto * -1 AS monto
             FROM dbo.Riteve
             WHERE MONTH(fecha) = MONTH(@infecha) AND YEAR(fecha) = YEAR(@infecha)
-
         ) AS Reportes;
 
     END TRY
     BEGIN CATCH
-        SET @outresult = ERROR_NUMBER();
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
 
--- ******************************CALENDARIO******************************
+-- ****************************** CALENDARIO ******************************
 
 CREATE PROCEDURE dbo.Calendario
-    @infecha DATE,
-    @outresult INT OUTPUT
+    @infecha DATE
 
 AS
 BEGIN
     BEGIN TRY
-
-        SET @outresult = 0;
-
+        -- Seleccionar los mantenimientos del mes
         SELECT 
             fecha AS Fecha, 
             'Mantenimiento' AS Descripcion, 
@@ -609,6 +476,7 @@ BEGIN
 
         UNION ALL
 
+        -- Seleccionar los alquileres del mes
         SELECT 
             fechainicio AS Fecha, 
             'Alquiler' AS Descripcion, 
@@ -618,6 +486,7 @@ BEGIN
 
         UNION ALL
 
+        -- Seleccionar Riteve del mes
         SELECT 
             fecha AS Fecha, 
             'Riteve' AS Descripcion, 
@@ -629,7 +498,7 @@ BEGIN
 
     END TRY
     BEGIN CATCH
-        SET @outresult = ERROR_NUMBER();
+        RETURN ERROR_NUMBER();
     END CATCH
 END;
 GO
