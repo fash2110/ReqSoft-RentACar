@@ -167,9 +167,10 @@
         <!-- Barra de navegación de pestañas -->
         <div class="tab-bar">
             <a href="#" class="active">Detalles</a>
-            <a href="#">Alquileres</a>
+            <a href="{{ url_for('consulta_alquileres', id=vehiculo.placa) }}">Alquileres</a>
             <a href="#">Mantenimientos</a>
         </div>
+
 
         <!-- Botones de edición y eliminación -->
         <div class="edit-buttons">

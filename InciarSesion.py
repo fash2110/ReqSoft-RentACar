@@ -178,6 +178,31 @@ def eliminar_vehiculo(id):
 
     return redirect(url_for('Inicio'))
 
+@app.route('/consulta_alquiler/<id>')
+def consulta_alquileres(id):
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Llamar al SP para consultar los alquileres del vehículo
+        cursor.execute("EXEC ConsultarAlquiler @inplaca = ?", (id,))
+        alquileres = cursor.fetchall()
+
+        # Consulta la información del vehículo
+        cursor.execute("SELECT marca, modelo, anno FROM Vehiculos WHERE placa = ?", (id,))
+        vehiculo_info = cursor.fetchone()
+
+        # Si se encuentran alquileres, los mostramos en la tabla
+        return render_template('ConsultaAlquileres.html', alquileres=alquileres, vehiculo=vehiculo_info)
+
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for('Inicio'))
+
+    finally:
+        connection.close()
+
+
 
 @app.route('/reportes')
 def reportes():

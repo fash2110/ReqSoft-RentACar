@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alquileres de Vehículo</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #3E0063;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3E0063;
+            color: white;
+        }
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .vehicle-header h1 {
+            font-size: 32px;
+        }
+        .vehicle-header p {
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>{{ vehiculo.marca }} {{ vehiculo.modelo }}</h1>
+        <p>{{ vehiculo.anno }}</p> <!-- Año del vehículo -->
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alquiler in alquileres %}
+                <tr>
+                    <td>{{ alquiler[1] }}</td> <!-- Fecha Inicio -->
+                    <td>{{ alquiler[2] }}</td> <!-- Fecha Fin -->
+                    <td>{{ alquiler[3] }}</td> <!-- Cliente -->
+                    <td>{{ alquiler[4] }}</td> <!-- Total Monto -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
+
