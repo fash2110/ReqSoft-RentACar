@@ -122,7 +122,9 @@
 
         <!-- Botones de edición y eliminación -->
         <div class="edit-buttons">
-            <i class="material-icons">edit</i>
+            <a href="{{ url_for('modificar_vehiculo', id=vehiculo.placa) }}">
+                <i class="material-icons">edit</i>
+            </a>
             <i class="material-icons">delete</i>
         </div>
 

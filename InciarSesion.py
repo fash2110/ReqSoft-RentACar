@@ -98,7 +98,69 @@ def detalles_vehiculo(id):
     finally:
         connection.close()
 
+# Ruta para mostrar el formulario de modificación de un vehículo
+@app.route('/modificar/<id>', methods=['GET', 'POST'])
+def modificar_vehiculo(id):
+    if request.method == 'POST':
 
+        # DATOS DE LA APLICACION
+        color = request.form['color']
+        idTipo = request.form['idTipo']
+        idCombustible = request.form['idCombustible']
+        idTransmision = request.form['idTransmision']
+        idEstado = request.form['idEstado']
+        descripcion = request.form['descripcion']
+
+        try:
+
+            # CONEXION CON BASE DE DATOS
+            connection = get_connection()
+            cursor = connection.cursor()
+
+            # LLAMADO AL STORED PROCEDURE
+            cursor.execute("""
+                EXEC dbo.ModificarVehiculo
+                    @inplaca=?,
+                    @inmodelo=?,
+                    @inmarca=?,
+                    @inanno=?,
+                    @incolor=?,
+                    @inidTipo=?,
+                    @inidCombustible=?,
+                    @inidTransmision=?,
+                    @inidEstado=?,
+                    @indescripcion=?
+            """, (id, None, None, None, color, idTipo, idCombustible, idTransmision, idEstado, descripcion))
+
+            connection.commit()
+
+            return redirect(url_for('detalles_vehiculo', id=id))
+
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('detalles_vehiculo', id=id))
+        finally:
+            connection.close()
+
+    else:
+        try:
+
+            # CONEXION CON BASE DE DATOS
+            connection = get_connection()
+            cursor = connection.cursor()
+            cursor.execute("EXEC dbo.ConsultaVehiculo ?", (id,))
+            vehiculo = cursor.fetchone()
+
+            if vehiculo:
+                return render_template('ModificarVehiculo.html', vehiculo=vehiculo)
+            else:
+                flash('No se encontraron detalles para este vehículo.')
+                return redirect(url_for('Inicio'))
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('Inicio'))
+        finally:
+            connection.close()
 
 @app.route('/reportes')
 def reportes():

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Vehículo</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            width: 80%;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #3E0063;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #6c6c6c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            color: #333;
+        }
+
+        textarea {
+            height: 60px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .button-container {
+            grid-column: span 2;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 30px;
+            background-color: #5e366a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4e2f5b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Modificar Vehículo</h2> <!-- Título centrado -->
+
+        <form action="{{ url_for('modificar_vehiculo', id=vehiculo[0]) }}" method="POST">
+            <div>
+                <label for="marca">Marca</label>
+                <input type="text" id="marca" name="marca" value="{{ vehiculo[2] }}" disabled>
+            </div>
+
+            <div>
+                <label for="modelo">Modelo</label>
+                <input type="text" id="modelo" name="modelo" value="{{ vehiculo[1] }}" disabled>
+            </div>
+
+            <div>
+                <label for="anno">Año</label>
+                <input type="text" id="anno" name="anno" value="{{ vehiculo[3] }}" disabled>
+            </div>
+
+            <div>
+                <label for="placa">Placa</label>
+                <input type="text" id="placa" name="placa" value="{{ vehiculo[0] }}" disabled>
+            </div>
+
+            <div>
+                <label for="color">Color</label>
+                <input type="text" id="color" name="color" value="{{ vehiculo[4] }}" required>
+            </div>
+
+            <div>
+                <label for="tipo">Tipo de Vehículo</label>
+                <select id="tipo" name="idTipo">
+                    <option value="1" {% if vehiculo[5] == 1 %}selected{% endif %}>SUV</option>
+                    <option value="2" {% if vehiculo[5] == 2 %}selected{% endif %}>VAN</option>
+                    <option value="3" {% if vehiculo[5] == 3 %}selected{% endif %}>PickUp</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="combustible">Combustible</label>
+                <select id="combustible" name="idCombustible">
+                    <option value="1" {% if vehiculo[6] == 1 %}selected{% endif %}>Normal</option>
+                    <option value="2" {% if vehiculo[6] == 2 %}selected{% endif %}>Super</option>
+                    <option value="3" {% if vehiculo[6] == 3 %}selected{% endif %}>Diesel</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="transmision">Transmisión</label>
+                <select id="transmision" name="idTransmision">
+                    <option value="1" {% if vehiculo[7] == 1 %}selected{% endif %}>Manual</option>
+                    <option value="2" {% if vehiculo[7] == 2 %}selected{% endif %}>Automático</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="estado">Estado</label>
+                <select id="estado" name="idEstado">
+                    <option value="1" {% if vehiculo[8] == 1 %}selected{% endif %}>Disponible</option>
+                    <option value="2" {% if vehiculo[8] == 2 %}selected{% endif %}>Alquilado</option>
+                    <option value="3" {% if vehiculo[8] == 3 %}selected{% endif %}>En Mantenimiento</option>
+                </select>
+            </div>
+
+            <div class="full-width">
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion">{{ vehiculo[9] }}</textarea>
+            </div>
+
+            <div class="button-container">
+                <button type="submit">Modificar vehículo</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
