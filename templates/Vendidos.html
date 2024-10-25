@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Vehículos Vendidos</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Main content styling */
+        main {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #3E0063;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3E0063;
+            color: white;
+        }
+
+        td {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        {% include '_sidebar.html' %} <!-- Aquí se incluye la sidebar -->
+
+        <main>
+            <h1>Calendario de Vehículos</h1>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for evento in calendario %}
+                    <tr>
+                        <td>{{ evento.Fecha }}</td> <!-- Columna Fecha -->
+                        <td>{{ evento.Descripcion }}</td> <!-- Columna Tipo de Evento (Alquiler, Mantenimiento, etc.) -->
+                        <td>{{ evento.Detalle }}</td> <!-- Detalle del evento -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

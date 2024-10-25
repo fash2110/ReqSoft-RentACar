@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reportes</title>
+
+    <!-- Importación de Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,48 +17,11 @@
             display: flex;
         }
 
-        /* Barra lateral */
-        .sidebar {
-            width: 80px;
-            background-color: #f6f0f5;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-        }
-
-        .sidebar button {
-            background-color: #f6f0f5;
-            border: none;
-            margin-bottom: 20px;
-            cursor: pointer;
-            font-size: 18px;
-            color: #4c1c84;
-            padding: 10px;
-        }
-
-        .sidebar button:hover {
-            background-color: #e0d5e5;
-            border-radius: 8px;
-        }
-
-        .hamburger-menu {
-            font-size: 30px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .plus-button {
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        /* Contenido principal */
+        /* Asegura que el main-content tenga un margen para evitar ser tapado por la sidebar */
         .main-content {
-            flex-grow: 1;
-            padding: 20px;
+            margin-left: 120px; /* Ajuste para evitar que se superponga */
             background-color: #fdf7ff;
+            flex-grow: 1;
         }
 
         .header {
@@ -101,17 +68,9 @@
     </style>
 </head>
 <body>
-    <!-- Barra lateral -->
-    <div class="sidebar">
-	<a href="{{ url_for('Inicio') }}">
-            <div class="hamburger-menu">☰</div>
-	</a>
 
-        <button class="plus-button">+</button>
-        <button>Vehículos</button>
-        <button>Reportes</button>
-        <button>Vendidos</button>
-    </div>
+    <!-- Incluir la sidebar fuera del main-content -->
+    {% include '_sidebar.html' %}
 
     <!-- Contenido principal -->
     <div class="main-content">

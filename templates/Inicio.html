@@ -6,11 +6,10 @@
     <title>Inicio</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+
+        main {
+            margin-left: 100px;  /* Para dejar espacio para la sidebar */
+            padding: 20px;
         }
 
         body {
@@ -24,33 +23,6 @@
             width: 100%;
         }
 
-        .sidebar {
-            width: 60px;
-            background-color: #f2f2f7;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-        }
-
-        .sidebar ul li {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #7a7a7a;
-            cursor: pointer;
-        }
-
-        .sidebar ul li i {
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
 
         .add-btn {
             background-color: #f8d7da;
@@ -135,47 +107,12 @@
 <body>
 
 <div class="container">
-<aside class="sidebar" style="display: flex; flex-direction: column; align-items: center;">
-    <button class="menu-toggle" style="background: none; border: none;"><i class="material-icons">menu</i></button>
-    <nav style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-        <ul style="list-style-type: none; padding: 0; margin: 0; text-align: center;">
-            <li style="margin-bottom: 20px;">
-                <a href="{{ url_for('Inicio') }}" style="color: #7a7a7a; text-decoration: none;">
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <i class="material-icons" style="display: block; margin-bottom: 5px; background-color: red; color: white; border-radius: 50%; padding: 10px;">
-                            directions_car
-                        </i>
-                        Vehículos
-                    </div>
-                </a>
-            </li>
-
-            <!-- Otros botones del sidebar -->
-            <li style="margin-bottom: 20px;">
-                <a href="{{ url_for('reportes') }}" style="color: #7a7a7a; text-decoration: none;">
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <i class="material-icons" style="display: block; margin-bottom: 5px;">bar_chart</i>
-                        Reportes
-                    </div>
-                </a>
-            </li>
-            <li>
-                <a href="#" style="color: #7a7a7a; text-decoration: none;">
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <i class="material-icons" style="display: block; margin-bottom: 5px;">check_circle</i>
-                        Vendidos
-                    </div>
-                </a>
-            </li>
-        </ul>
-    </nav>
-    <button class="add-btn" style="background-color: #f8d7da; border: none; padding: 10px; border-radius: 50%; font-size: 24px; color: #fff; cursor: pointer;">
-        <i class="material-icons">add</i>
-    </button>
-</aside>
 
 
     <main>
+
+    {% include '_sidebar.html' %} <!-- Aquí se incluye la sidebar reutilizable -->
+
         <div class="search-bar">
             <input type="text" placeholder="Buscar vehículo">
             <i class="material-icons">search</i>

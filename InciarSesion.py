@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from datetime import timedelta
+from datetime import datetime
 from connection import get_connection
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Cambia esto por una clave más segura en producción
@@ -45,6 +46,13 @@ def login():
         return redirect(url_for('form'))
     finally:
         connection.close()
+
+
+@app.route('/logout')
+def logout():
+    # Cierra la sesión eliminando la información del usuario
+    session.pop('usuario', None)
+    return redirect(url_for('form'))  # Redirige a la página de inicio de sesión
 
 # Ruta para la pantalla principal (Inicio)
 @app.route('/Pantalla')
@@ -201,6 +209,27 @@ def consulta_alquileres(id):
 
     finally:
         connection.close()
+
+@app.route('/vendidos')
+def vendidos():
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Llamar al Stored Procedure con la fecha actual
+        cursor.execute("EXEC dbo.Calendario @infecha = ?", (datetime.now(),))
+        calendario = cursor.fetchall()
+
+        return render_template('vendidos.html', calendario=calendario)
+
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for('Inicio'))
+
+    finally:
+        connection.close()
+
+
 
 
 

@@ -1,0 +1,120 @@
+<aside class="sidebar">
+
+    <div class="logo" style="margin-bottom: 20px; display: flex; justify-content: center; align-items: center;">
+        <span style="font-size: 30px; font-weight: bold; color: #4c1c84;">Payara</span>
+    </div>
+
+    <nav class="nav-links">
+        <ul>
+            <li>
+                <a href="{{ url_for('Inicio') }}" class="{% if request.path == url_for('Inicio') %}active{% endif %}">
+                    <i class="material-icons">directions_car</i>
+                    Vehículos
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('reportes') }}" class="{% if request.path == url_for('reportes') %}active{% endif %}">
+                    <i class="material-icons">bar_chart</i>
+                    Reportes
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('vendidos') }}" class="{% if request.path == url_for('vendidos') %}active{% endif %}">
+                    <i class="material-icons">check_circle</i>
+                    Vendidos
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="bottom-buttons">
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            <i class="material-icons">logout</i>
+        </a>
+    </div>
+
+    <style>
+        /* Sidebar completa, con un ancho fijo */
+        .sidebar {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            width: 120px; /* Aumentar el ancho */
+            height: 100vh; /* Altura completa */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100; /* Asegurarse de que esté por encima de otros elementos */
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .sidebar ul li a {
+            color: #7a7a7a;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Clase para resaltar la página activa */
+        .sidebar ul li a.active {
+            background-color: #d7c1e9; /* Color de fondo morado leve */
+            color: #4c1c84;
+            border-radius: 50%; /* Para darle forma de círculo */
+            padding: 10px; /* Añadir relleno para ajustar el tamaño */
+        }
+
+
+        .sidebar ul li a i {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar .menu-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        .logout-btn {
+            background-color: #f44336; /* Color rojo */
+            border-radius: 50%;
+            padding: 15px;
+            color: white;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .add-btn {
+            background-color: #f8d7da; /* Color rojo claro */
+            margin-top: 20px;
+        }
+
+        /* Asegurar que el contenido principal se ajuste */
+        main {
+            margin-left: 120px; /* Ajustar el margen del contenido principal al ancho de la sidebar */
+            padding: 20px;
+        }
+    </style>
+</aside>
