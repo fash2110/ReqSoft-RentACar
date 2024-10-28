@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertar Alquiler</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #3E0063;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+        input[type="text"], input[type="datetime-local"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            background-color: #3E0063;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .submit-btn:hover {
+            background-color: #5A007A;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Insertar Alquiler</h2>
+    <form action="{{ url_for('insertar_alquiler') }}" method="POST">
+        <input type="hidden" name="id_vehiculo" value="{{ id_vehiculo }}">
+
+        <label for="fecha_inicio">Fecha de Inicio</label>
+        <input type="datetime-local" name="fecha_inicio" required>
+
+        <label for="fecha_fin">Fecha de Fin</label>
+        <input type="datetime-local" name="fecha_fin" required>
+
+        <label for="cliente">Cliente</label>
+        <input type="text" name="cliente" required>
+
+        <label for="monto">Monto</label>
+        <input type="number" name="monto" step="0.01" required>
+
+        <button type="submit" class="submit-btn">Guardar</button>
+    </form>
+</div>
+
+</body>
+</html>

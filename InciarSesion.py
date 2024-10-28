@@ -200,7 +200,15 @@ def consulta_alquileres(id):
         cursor.execute("SELECT marca, modelo, anno FROM Vehiculos WHERE placa = ?", (id,))
         vehiculo_info = cursor.fetchone()
 
-        # Si se encuentran alquileres, los mostramos en la tabla
+        # Validación de datos
+        if not vehiculo_info:
+            flash('No se encontraron detalles para este vehículo.')
+            return redirect(url_for('Inicio'))
+
+        if not alquileres:
+            flash('No hay registros de alquileres para este vehículo.')
+            return redirect(url_for('detalles_vehiculo', id=id))
+
         return render_template('ConsultaAlquileres.html', alquileres=alquileres, vehiculo=vehiculo_info)
 
     except Exception as e:
@@ -209,6 +217,7 @@ def consulta_alquileres(id):
 
     finally:
         connection.close()
+
 
 @app.route('/vendidos')
 def vendidos():
@@ -230,7 +239,39 @@ def vendidos():
         connection.close()
 
 
+# Ruta para mostrar el formulario de inserción de alquiler
+@app.route('/vehiculo/<id>/insertar_alquiler', methods=['GET'])
+def mostrar_formulario_alquiler(id):
+    return render_template('InsertarAlquiler.html', id_vehiculo=id)
 
+
+# Ruta para procesar la inserción de alquiler
+@app.route('/vehiculo/insertar_alquiler', methods=['POST'])
+def insertar_alquiler():
+    id_vehiculo = request.form['id_vehiculo']
+    fecha_inicio = request.form['fecha_inicio']
+    fecha_fin = request.form['fecha_fin']
+    cliente = request.form['cliente']
+    monto = request.form['monto']
+
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Ejecuta el SP para insertar el alquiler
+        cursor.execute(
+            "EXEC InsertarAlquiler @inidVehiculo=?, @infechaInicio=?, @infechaFin=?, @incliente=?, @inmonto=?",
+            (id_vehiculo, fecha_inicio, fecha_fin, cliente, monto))
+
+        connection.commit()
+        flash("Alquiler insertado exitosamente.")
+        return redirect(url_for('consulta_alquileres', id=id_vehiculo))
+    except Exception as e:
+        flash(str(e))
+        print(str(e))
+        return redirect(url_for('mostrar_formulario_alquiler', id=id_vehiculo))
+    finally:
+        connection.close()
 
 
 @app.route('/reportes')
