@@ -5,9 +5,10 @@ def get_connection():
         connection = pyodbc.connect(
             # AQUI VAN LOS DATOS DEL SERVIDOR (EN ESTE CASO ES UN SERVIDOR LOCAL)
             'DRIVER={SQL Server};'
-            'SERVER=CHACO-LAPTOP\SQLEXPRESS;'
+            'SERVER=rentacar.cx40oo84oi0l.us-east-2.rds.amazonaws.com,1433;'
             'DATABASE=RentACar;'
-            'Trusted_Connection=yes;'
+            'uid=admin;pwd=9bUGOtPruE3feZP2L3tQ;',
+            autocommit=True
         )
         print("Conexión exitosa a la base de datos.")
         return connection
