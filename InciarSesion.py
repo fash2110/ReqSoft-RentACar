@@ -274,9 +274,50 @@ def insertar_alquiler():
         connection.close()
 
 
-@app.route('/reportes')
+@app.route('/reportes', methods=['GET'])
 def reportes():
-    return render_template('reportes.html')
+    mes = request.args.get('mes')
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        reportes_data = []
+
+        if mes and mes != "":
+            # Ejecutar SP para filtrar reportes por mes
+            cursor.execute("EXEC FiltrarReportesPorMes ?", mes)
+            reportes_data = [{'descripcion': row[0], 'monto': row[1]} for row in cursor.fetchall()]
+        else:
+            # Ejecutar SP para listar alquileres
+            cursor.execute("EXEC ListarAlquileres")
+            alquileres = cursor.fetchall()
+
+            # Ejecutar SP para listar mantenimientos
+            cursor.execute("EXEC ListarMantenimientos")
+            mantenimientos = cursor.fetchall()
+
+            # Añadir datos de alquileres a la lista de reportes
+            for alquiler in alquileres:
+                reportes_data.append({
+                    'descripcion': f'Alquiler - {alquiler[4]}',  # cliente en alquiler[4]
+                    'monto': alquiler[5]  # monto en alquiler[5]
+                })
+
+            # Añadir datos de mantenimientos a la lista de reportes
+            for mantenimiento in mantenimientos:
+                reportes_data.append({
+                    'descripcion': f'Mantenimiento - {mantenimiento[1]}',  # Suponiendo que la columna descripción es la tercera
+                    'monto': mantenimiento[3]  # Suponiendo que la columna costo es la cuarta
+                })
+
+        return render_template('Reportes.html', reportes=reportes_data, mes=mes)
+
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for('Inicio'))
+    finally:
+        connection.close()
+
 
 
 if __name__ == '__main__':
