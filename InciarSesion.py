@@ -286,7 +286,7 @@ def reportes():
         if mes and mes != "":
             # Ejecutar SP para filtrar reportes por mes
             cursor.execute("EXEC FiltrarReportesPorMes ?", mes)
-            reportes_data = [{'descripcion': row[0], 'monto': row[1]} for row in cursor.fetchall()]
+            reportes_data = [{'descripcion': row[0], 'monto': row[1], 'fecha': row[2]} for row in cursor.fetchall()]
         else:
             # Ejecutar SP para listar alquileres
             cursor.execute("EXEC ListarAlquileres")
@@ -296,19 +296,42 @@ def reportes():
             cursor.execute("EXEC ListarMantenimientos")
             mantenimientos = cursor.fetchall()
 
+            # Ejecutar SP para listar riteve
+            cursor.execute("EXEC ListarRiteve")
+            riteve = cursor.fetchall()
+
+
             # Añadir datos de alquileres a la lista de reportes
             for alquiler in alquileres:
                 reportes_data.append({
                     'descripcion': f'Alquiler - {alquiler[4]}',  # cliente en alquiler[4]
-                    'monto': alquiler[5]  # monto en alquiler[5]
+                    'monto': alquiler[5],  # monto en alquiler[5]
+                    'fecha': alquiler[2]  # fecha en alquiler[2]
                 })
 
             # Añadir datos de mantenimientos a la lista de reportes
             for mantenimiento in mantenimientos:
                 reportes_data.append({
                     'descripcion': f'Mantenimiento - {mantenimiento[1]}',  # Suponiendo que la columna descripción es la tercera
-                    'monto': mantenimiento[3]  # Suponiendo que la columna costo es la cuarta
+                    'monto': mantenimiento[3],  # Suponiendo que la columna costo es la cuarta
+                    'fecha': mantenimiento[2]  # fecha en mantenimiento[2]
                 })
+
+            # Añadir datos de riteve a la lista de reportes
+            for rev in riteve:
+                reportes_data.append({
+                    'descripcion': f'Riteve - {rev[1]}',  # descripción en rev[4]
+                    'monto': rev[3],  # monto en rev[3]
+                    'fecha': rev[2]  # fecha en rev[2]
+                })
+
+        # Convertir las fechas a objetos datetime antes de ordenar
+        for reporte in reportes_data:
+            if isinstance(reporte['fecha'], str):
+                reporte['fecha'] = datetime.strptime(reporte['fecha'], '%Y-%m-%d')
+
+        # Ordenar la lista de reportes por fecha
+        reportes_data.sort(key=lambda x: x['fecha'])
 
         return render_template('Reportes.html', reportes=reportes_data, mes=mes)
 
@@ -317,7 +340,6 @@ def reportes():
         return redirect(url_for('Inicio'))
     finally:
         connection.close()
-
 
 
 if __name__ == '__main__':
