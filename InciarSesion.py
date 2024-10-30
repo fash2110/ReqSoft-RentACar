@@ -141,10 +141,10 @@ def modificar_vehiculo(id):
 
             connection.commit()
 
-            return redirect(url_for('detalles_vehiculo', id=id))
+            return redirect(url_for('vehiculo', id=id))
         except Exception as e:
             flash(str(e))
-            return redirect(url_for('detalles_vehiculo', id=id))
+            return redirect(url_for('vehiculo', id=id))
         finally:
             connection.close()
     else:
@@ -173,6 +173,8 @@ def eliminar_vehiculo(id):
 
     try:
 
+        print(id)
+
         # CONEXION A LA BASE DE DATOS
         connection = get_connection()
         cursor = connection.cursor()
@@ -181,6 +183,8 @@ def eliminar_vehiculo(id):
 
     except Exception as e:
         flash(str(e))
+        print(str(e))
+
     finally:
         connection.close()
 
@@ -235,41 +239,6 @@ def vendidos():
         flash(str(e))
         return redirect(url_for('Inicio'))
 
-    finally:
-        connection.close()
-
-
-# Ruta para mostrar el formulario de inserción de alquiler
-@app.route('/vehiculo/<id>/insertar_alquiler', methods=['GET'])
-def mostrar_formulario_alquiler(id):
-    return render_template('InsertarAlquiler.html', id_vehiculo=id)
-
-
-# Ruta para procesar la inserción de alquiler
-@app.route('/vehiculo/insertar_alquiler', methods=['POST'])
-def insertar_alquiler():
-    id_vehiculo = request.form['id_vehiculo']
-    fecha_inicio = request.form['fecha_inicio']
-    fecha_fin = request.form['fecha_fin']
-    cliente = request.form['cliente']
-    monto = request.form['monto']
-
-    try:
-        connection = get_connection()
-        cursor = connection.cursor()
-
-        # Ejecuta el SP para insertar el alquiler
-        cursor.execute(
-            "EXEC InsertarAlquiler @inidVehiculo=?, @infechaInicio=?, @infechaFin=?, @incliente=?, @inmonto=?",
-            (id_vehiculo, fecha_inicio, fecha_fin, cliente, monto))
-
-        connection.commit()
-        flash("Alquiler insertado exitosamente.")
-        return redirect(url_for('consulta_alquileres', id=id_vehiculo))
-    except Exception as e:
-        flash(str(e))
-        print(str(e))
-        return redirect(url_for('mostrar_formulario_alquiler', id=id_vehiculo))
     finally:
         connection.close()
 
@@ -372,6 +341,89 @@ def vehiculo(id):
     finally:
         connection.close()
 
+
+@app.route('/vehiculo/<id>/insertar_alquiler', methods=['GET'])
+def mostrar_formulario_alquiler(id):
+    # Renderizar el formulario de inserción de alquiler, pasando la placa del vehículo
+    return render_template('InsertarAlquiler.html', vehiculo={'placa': id})
+
+@app.route('/vehiculo/insertar_alquiler', methods=['POST'])
+def insertar_alquiler():
+    id_vehiculo = request.form['placa']
+    fecha_inicio_str = request.form['fechaInicio']
+    fecha_fin_str = request.form['fechaFin']
+    cliente = request.form['cliente']
+    monto = request.form['monto']
+
+    try:
+        # Convierte las fechas a objetos datetime
+        fecha_inicio = datetime.strptime(fecha_inicio_str, '%Y-%m-%dT%H:%M')
+        fecha_fin = datetime.strptime(fecha_fin_str, '%Y-%m-%dT%H:%M')
+
+        # Validación: La fecha de inicio debe ser antes que la fecha de fin
+        if fecha_inicio >= fecha_fin:
+            flash("La fecha de inicio debe ser anterior a la fecha de fin.")
+            return redirect(url_for('mostrar_formulario_alquiler', id=id_vehiculo))
+
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Ejecuta el SP para insertar el alquiler
+        cursor.execute(
+            "EXEC InsertarAlquiler @inidVehiculo=?, @infechaInicio=?, @infechaFin=?, @incliente=?, @inmonto=?",
+            (id_vehiculo, fecha_inicio, fecha_fin, cliente, monto))
+
+        connection.commit()
+        flash("Alquiler insertado exitosamente.")
+        return redirect(url_for('vehiculo', id=id_vehiculo))
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for('mostrar_formulario_alquiler', id=id_vehiculo))
+    finally:
+        connection.close()
+
+
+@app.route('/modificar_alquiler/<int:id>', methods=['GET', 'POST'])
+def modificar_alquiler(id):
+    if request.method == 'GET':
+        try:
+            # Conexión con la base de datos
+            connection = get_connection()
+            cursor = connection.cursor()
+            cursor.execute("EXEC dbo.ConsultarAlquilerPorId @inidalquiler = ?", (id,))
+            alquiler = cursor.fetchone()
+
+            if not alquiler:
+                flash('No se encontró el alquiler especificado', 'error')
+                return redirect(url_for('consulta_alquileres', id=id))
+            return render_template('ModificarAlquiler.html', alquiler=alquiler)
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('consulta_alquileres', id=id))
+        finally:
+            connection.close()
+
+    if request.method == 'POST':
+        # Capturar datos del formulario
+        fecha_inicio = request.form['fechaInicio']
+        fecha_fin = request.form['fechaFin']
+        cliente = request.form['cliente']
+        monto = request.form['monto']
+
+        try:
+            # Conexión con la base de datos
+            connection = get_connection()
+            cursor = connection.cursor()
+            cursor.execute(
+                "EXEC dbo.ModificarAlquiler @inidalquiler = ?, @infechaInicio = ?, @infechaFin = ?, @incliente = ?, @inmonto = ?",
+                (id, fecha_inicio, fecha_fin, cliente, monto))
+            connection.commit()
+            flash('Alquiler modificado con éxito', 'success')
+        except Exception as e:
+            flash('Error al modificar el alquiler: ' + str(e), 'error')
+        finally:
+            connection.close()
+        return redirect(url_for('consulta_alquileres', id=id))
 
 if __name__ == '__main__':
     app.run(debug=True)
