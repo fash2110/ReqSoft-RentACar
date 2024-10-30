@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ vehiculo.marca }} {{ vehiculo.modelo }} - Vehículo</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            background-color: #3E0063; /* Color morado */
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 20px; /* Esquinas redondeadas */
+            margin-bottom: 20px;
+            text-decoration: none;
+            width: fit-content;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button i {
+            margin-right: 5px;
+            font-size: 24px;
+        }
+
+        .back-button:hover {
+            background-color: #5A007A; /* Un tono ligeramente más claro al pasar el cursor */
+        }
+
+        .tab-bar {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab-bar a {
+            text-decoration: none;
+            color: #3E0063;
+            font-size: 18px;
+            margin: 0 20px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .tab-bar a.active {
+            border-bottom: 3px solid #3E0063;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+            max-width: 600px; /* Ancho máximo para los detalles */
+            margin: 0 auto;
+        }
+
+        .details div {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .details div i {
+            margin-right: 10px;
+            color: #6c6c6c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3E0063;
+            color: white;
+        }
+
+        .edit-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-buttons i {
+            cursor: pointer;
+            font-size: 32px;
+            color: #3E0063;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Botón de regresar -->
+    <a href="{{ url_for('Inicio') }}" class="back-button">
+        <i class="material-icons">arrow_back</i> Regresar
+    </a>
+
+    <!-- Barra de navegación de pestañas -->
+    <div class="tab-bar">
+        <a href="#" class="active" onclick="showTab('detalles')">Detalles</a>
+        <a href="#" onclick="showTab('alquileres')">Alquileres</a>
+        <a href="#" onclick="showTab('mantenimientos')">Mantenimientos</a>
+    </div>
+
+    <!-- Contenido de la pestaña Detalles -->
+    <div id="detalles" class="tab-content active">
+        <div class="details">
+            <div><i class="material-icons">info</i> Placa: {{ vehiculo.placa }}</div>
+            <div><i class="material-icons">palette</i> Color: {{ vehiculo.color }}</div>
+            <div><i class="material-icons">category</i> Tipo: {{ vehiculo.nombre_tipo }}</div>
+            <div><i class="material-icons">local_gas_station</i> Combustible: {{ vehiculo.nombre_combustible }}</div>
+            <div><i class="material-icons">settings</i> Transmisión: {{ vehiculo.nombre_transmision }}</div>
+            <div><i class="material-icons">build</i> Estado: {{ vehiculo.nombre_estado }}</div>
+            <div><i class="material-icons">description</i> Descripción: {{ vehiculo.descripcion }}</div>
+        </div>
+        <div class="edit-buttons">
+            <i class="material-icons" title="Modificar Vehículo">edit</i>
+            <i class="material-icons" title="Eliminar Vehículo">delete</i>
+            <!-- Comentario: Añadir funcionalidad para editar/eliminar vehículo -->
+        </div>
+    </div>
+
+    <!-- Contenido de la pestaña Alquileres -->
+    <div id="alquileres" class="tab-content">
+        <table>
+            <thead>
+            <tr>
+                <th>Fecha inicio</th>
+                <th>Fecha Fin</th>
+                <th>Cliente</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for alquiler in alquileres %}
+            <tr>
+                <td>{{ alquiler[1] }}</td> <!-- Fecha Inicio -->
+                <td>{{ alquiler[2] }}</td> <!-- Fecha Fin -->
+                <td>{{ alquiler[3] }}</td> <!-- Cliente -->
+                <td>{{ alquiler[4] }}</td> <!-- Total Monto -->
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="edit-buttons">
+            <i class="material-icons" title="Añadir Alquiler">add</i>
+            <i class="material-icons" title="Modificar Alquiler">edit</i>
+            <i class="material-icons" title="Eliminar Alquiler">delete</i>
+            <!-- Comentario: Añadir funcionalidad para añadir/modificar/eliminar alquiler -->
+        </div>
+    </div>
+
+    <!-- Contenido de la pestaña Mantenimientos (solo visual) -->
+    <div id="mantenimientos" class="tab-content">
+        <p>Aquí se mostrarán los mantenimientos. (Visual pendiente de implementación)</p>
+        <div class="edit-buttons">
+            <i class="material-icons" title="Añadir Mantenimiento">add</i>
+            <i class="material-icons" title="Modificar Mantenimiento">edit</i>
+            <i class="material-icons" title="Eliminar Mantenimiento">delete</i>
+            <!-- Comentario: Añadir funcionalidad para añadir/modificar/eliminar mantenimiento -->
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function showTab(tabId) {
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+
+        const tabLinks = document.querySelectorAll('.tab-bar a');
+        tabLinks.forEach(link => link.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+</script>
+
+</body>
+</html>

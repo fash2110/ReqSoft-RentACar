@@ -124,7 +124,7 @@
                     <div class="vehicle-icon">{{ vehiculo[2][0] }}</div> <!-- Primera letra de la marca -->
                     <div>
                         <!-- Enlace que redirige a la página de detalles del vehículo pasando la placa como parámetro -->
-                        <h4><a href="{{ url_for('detalles_vehiculo', id=vehiculo[0]) }}">{{ vehiculo[2] }} {{ vehiculo[1] }}</a></h4> <!-- Marca y modelo -->
+                        <h4><a href="{{ url_for('vehiculo', id=vehiculo[0]) }}">{{ vehiculo[2] }} {{ vehiculo[1] }}</a></h4> <!-- Marca y modelo -->
                         <p>{{ vehiculo[9] }}</p> <!-- Estado o descripción -->
                     </div>
                 </div>

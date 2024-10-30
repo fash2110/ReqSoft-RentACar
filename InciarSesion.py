@@ -341,6 +341,37 @@ def reportes():
     finally:
         connection.close()
 
+@app.route('/vehiculo/<id>')
+def vehiculo(id):
+    try:
+        # Conexión con la base de datos
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Consulta de detalles del vehículo
+        cursor.execute("{CALL dbo.ConsultaVehiculo(?)}", (id,))
+        vehiculo = cursor.fetchone()
+
+        # Validación de existencia del vehículo
+        if not vehiculo:
+            flash('No se encontraron detalles para este vehículo.')
+            return redirect(url_for('Inicio'))
+
+        # Consulta de alquileres del vehículo
+        cursor.execute("EXEC ConsultarAlquiler @inplaca = ?", (id,))
+        alquileres = cursor.fetchall()
+
+        # Consulta de mantenimientos del vehículo (pendiente de implementar)
+        mantenimientos = []  # Puedes modificar esto cuando la funcionalidad de mantenimientos esté lista
+
+        return render_template('Vehiculo.html', vehiculo=vehiculo, alquileres=alquileres, mantenimientos=mantenimientos)
+
+    except Exception as e:
+        flash(str(e))
+        return redirect(url_for('Inicio'))
+    finally:
+        connection.close()
+
 
 if __name__ == '__main__':
     app.run(debug=True)
