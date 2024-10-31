@@ -289,20 +289,39 @@
             </a>
             <i class="material-icons" title="Modificar Alquiler">edit</i>
             <i class="material-icons" title="Eliminar Alquiler">delete</i>
-            <!-- Comentario: Añadir funcionalidad para añadir/modificar/eliminar alquiler -->
+
         </div>
     </div>
 
-    <!-- Contenido de la pestaña Mantenimientos (solo visual) -->
+    <!-- Contenido de la pestaña Mantenimientos -->
     <div id="mantenimientos" class="tab-content">
-        <p>Aquí se mostrarán los mantenimientos. (Visual pendiente de implementación)</p>
+        <table>
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Descripcion</th>
+                <th>Monto</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for mantenimiento in mantenimientos %}
+            <tr>
+                <td>{{ mantenimiento[2] }}</td> <!-- Fecha -->
+                <td>{{ mantenimiento[4] }}</td> <!-- Descripción -->
+                <td>{{ mantenimiento[3] }}</td> <!-- Monto -->
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         <div class="edit-buttons">
-            <i class="material-icons" title="Añadir Mantenimiento">add</i>
+            <a href="{{ url_for('mostrar_formulario_mantenimiento', id=vehiculo.placa) }}">
+                <i class="material-icons" title="Añadir Mantenimiento">add</i>
+            </a>
             <i class="material-icons" title="Modificar Mantenimiento">edit</i>
             <i class="material-icons" title="Eliminar Mantenimiento">delete</i>
-            <!-- Comentario: Añadir funcionalidad para añadir/modificar/eliminar mantenimiento -->
         </div>
     </div>
+
 
 </div>
 
