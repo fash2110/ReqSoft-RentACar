@@ -122,18 +122,25 @@
             <div>
                 <label for="tipo">Tipo de Vehículo</label>
                 <select id="tipo" name="idTipo">
-                    <option value="1" {% if vehiculo[5] == 1 %}selected{% endif %}>SUV</option>
-                    <option value="2" {% if vehiculo[5] == 2 %}selected{% endif %}>VAN</option>
-                    <option value="3" {% if vehiculo[5] == 3 %}selected{% endif %}>PickUp</option>
+                    <option value="1" {% if vehiculo[5] == 1 %}selected{% endif %}>Sedan</option>
+                    <option value="2" {% if vehiculo[5] == 2 %}selected{% endif %}>Hatchback</option>
+                    <option value="3" {% if vehiculo[5] == 3 %}selected{% endif %}>Coupe</option>
+                    <option value="4" {% if vehiculo[5] == 4 %}selected{% endif %}>SUV</option>
+                    <option value="5" {% if vehiculo[5] == 5 %}selected{% endif %}>Sportscar</option>
+                    <option value="6" {% if vehiculo[5] == 6 %}selected{% endif %}>Convertible</option>
+                    <option value="7" {% if vehiculo[5] == 7 %}selected{% endif %}>Crossover</option>
+                    <option value="8" {% if vehiculo[5] == 8 %}selected{% endif %}>Pickup</option>
+                    <option value="9" {% if vehiculo[5] == 9 %}selected{% endif %}>Wagon</option>
                 </select>
             </div>
 
             <div>
                 <label for="combustible">Combustible</label>
                 <select id="combustible" name="idCombustible">
-                    <option value="1" {% if vehiculo[6] == 1 %}selected{% endif %}>Normal</option>
-                    <option value="2" {% if vehiculo[6] == 2 %}selected{% endif %}>Super</option>
+                    <option value="1" {% if vehiculo[6] == 1 %}selected{% endif %}>Gasolina</option>
+                    <option value="2" {% if vehiculo[6] == 2 %}selected{% endif %}>Gas</option>
                     <option value="3" {% if vehiculo[6] == 3 %}selected{% endif %}>Diesel</option>
+                    <option value="4" {% if vehiculo[6] == 4 %}selected{% endif %}>Electrico</option>
                 </select>
             </div>
 
@@ -142,6 +149,7 @@
                 <select id="transmision" name="idTransmision">
                     <option value="1" {% if vehiculo[7] == 1 %}selected{% endif %}>Manual</option>
                     <option value="2" {% if vehiculo[7] == 2 %}selected{% endif %}>Automático</option>
+                    <option value="3" {% if vehiculo[7] == 3 %}selected{% endif %}>Mixto</option>
                 </select>
             </div>
 
@@ -150,7 +158,8 @@
                 <select id="estado" name="idEstado">
                     <option value="1" {% if vehiculo[8] == 1 %}selected{% endif %}>Disponible</option>
                     <option value="2" {% if vehiculo[8] == 2 %}selected{% endif %}>Alquilado</option>
-                    <option value="3" {% if vehiculo[8] == 3 %}selected{% endif %}>En Mantenimiento</option>
+                    <option value="3" {% if vehiculo[8] == 3 %}selected{% endif %}>Mantenimiento</option>
+                    <option value="4" {% if vehiculo[8] == 4 %}selected{% endif %}>Vendido</option>
                 </select>
             </div>
 

@@ -128,8 +128,6 @@ def ingresar_vehiculo():
             connection.close()
 
 
-
-
 @app.route('/detalles/<id>')
 def detalles_vehiculo(id):
     try:
@@ -144,7 +142,7 @@ def detalles_vehiculo(id):
 
         # VALIDACIÓN DE EXISTENCIA DE VEHÍCULO
         if vehiculo:
-            return render_template('Vehiculosdetalles.html', vehiculo=vehiculo)
+            return render_template('VehiculosDetalles.html', vehiculo=vehiculo)
         else:
             flash('No se encontraron detalles para este vehículo.')
             return redirect(url_for('Inicio'))
@@ -388,6 +386,7 @@ def vehiculo(id):
         alquileres = cursor.fetchall()
 
         # Consulta de mantenimientos del vehículo
+        
         cursor.execute("EXEC ListarMantenimientos")
         mantenimientos = cursor.fetchall()
 
@@ -397,6 +396,7 @@ def vehiculo(id):
         return render_template('Vehiculo.html', vehiculo=vehiculo, alquileres=alquileres, mantenimientos=mantenimientos)
 
     except Exception as e:
+        print(str(e))
         flash(str(e))
         return redirect(url_for('Inicio'))
     finally:
