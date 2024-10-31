@@ -1,10 +1,15 @@
 <aside class="sidebar">
 
-    <div class="logo" style="margin-bottom: 20px; display: flex; justify-content: center; align-items: center;">
+    <div class="logo" style="margin-bottom: 10px; display: flex; justify-content: center; align-items: center;">
         <span style="font-size: 30px; font-weight: bold; color: #4c1c84;">Payara</span>
     </div>
 
-    <nav class="nav-links">
+    <!-- Botón con el símbolo "+" directamente bajo el logo -->
+    <a href="{{ url_for('IngresarVehiculo') }}" class="add-btn">
+        <span style="font-size: 24px; font-weight: bold;">+</span> <!-- Símbolo "+" -->
+    </a>
+
+    <nav class="nav-links" style="padding-top: 10px;">
         <ul>
             <li>
                 <a href="{{ url_for('Inicio') }}" class="{% if request.path == url_for('Inicio') %}active{% endif %}">
@@ -33,12 +38,11 @@
     </div>
 
     <style>
-        /* Sidebar completa, con un ancho fijo */
         .sidebar {
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
-            width: 120px; /* Aumentar el ancho */
-            height: 100vh; /* Altura completa */
+            width: 120px;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -47,7 +51,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 100; /* Asegurarse de que esté por encima de otros elementos */
+            z-index: 100;
         }
 
         .sidebar ul {
@@ -69,25 +73,16 @@
             align-items: center;
         }
 
-        /* Clase para resaltar la página activa */
         .sidebar ul li a.active {
-            background-color: #d7c1e9; /* Color de fondo morado leve */
+            background-color: #d7c1e9;
             color: #4c1c84;
-            border-radius: 50%; /* Para darle forma de círculo */
-            padding: 10px; /* Añadir relleno para ajustar el tamaño */
+            border-radius: 50%;
+            padding: 10px;
         }
-
 
         .sidebar ul li a i {
             font-size: 30px;
             margin-bottom: 5px;
-        }
-
-        .sidebar .menu-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            margin-bottom: 20px;
         }
 
         .bottom-buttons {
@@ -96,9 +91,8 @@
             align-items: center;
         }
 
-
         .logout-btn {
-            background-color: #f44336; /* Color rojo */
+            background-color: #f44336;
             border-radius: 50%;
             padding: 15px;
             color: white;
@@ -107,13 +101,21 @@
         }
 
         .add-btn {
-            background-color: #f8d7da; /* Color rojo claro */
-            margin-top: 20px;
+            background-color: #f8d7da;
+            color: #4c1c84;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            text-decoration: none;
         }
 
-        /* Asegurar que el contenido principal se ajuste */
         main {
-            margin-left: 120px; /* Ajustar el margen del contenido principal al ancho de la sidebar */
+            margin-left: 120px;
             padding: 20px;
         }
     </style>
