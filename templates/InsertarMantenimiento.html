@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f6f0f5;
+            background-color: #f7f7f7;
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,9 +20,9 @@
 
         .form-container {
             background-color: #ffffff;
-            padding: 20px;
+            padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             max-width: 500px;
             width: 100%;
         }
@@ -29,6 +30,7 @@
         h2 {
             color: #3E0063;
             text-align: center;
+            margin-bottom: 25px;
         }
 
         label {
@@ -38,50 +40,78 @@
             display: block;
         }
 
-        input[type="text"], input[type="number"], input[type="datetime-local"] {
-            width: calc(100% - 20px);
+        input[type="text"],
+        input[type="number"],
+        input[type="datetime-local"] {
+            width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #d9d9d9;
             border-radius: 5px;
         }
 
-        button {
-            background-color: #3E0063;
-            color: white;
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+            margin: 0 5px;
         }
 
-        button:hover {
+        .insert-btn {
+            background-color: #3E0063;
+            color: white;
+        }
+
+        .insert-btn:hover {
             background-color: #5A007A;
+        }
+
+        .cancel-btn {
+            background-color: #f0f0f0;
+            color: #3E0063;
+        }
+
+        .cancel-btn:hover {
+            background-color: #ddd;
         }
     </style>
 </head>
 <body>
 
-<div class="form-container">
-    <h2>Insertar Mantenimiento</h2>
-    <form action="{{ url_for('insertar_mantenimiento') }}" method="POST">
-        <label for="placa">Placa del Vehículo:</label>
-        <input type="text" id="placa" name="placa" value="{{ vehiculo['placa'] }}" readonly>
+    <div class="form-container">
+        <h2>Insertar Mantenimiento</h2>
+        <form action="{{ url_for('insertar_mantenimiento') }}" method="POST">
+            <label for="placa">Placa del Vehículo:</label>
+            <input type="text" id="placa" name="placa" value="{{ vehiculo['placa'] }}" readonly>
 
-        <label for="fecha">Fecha:</label>
-        <input type="datetime-local" id="fecha" name="fecha" required>
+            <label for="fecha">Fecha:</label>
+            <input type="datetime-local" id="fecha" name="fecha" required>
 
-        <label for="monto">Monto:</label>
-        <input type="number" id="monto" name="monto" step="0.01" required>
+            <label for="monto">Monto:</label>
+            <input type="number" id="monto" name="monto" step="0.01" required>
 
-        <label for="descripcion">Descripción:</label>
-        <input type="text" id="descripcion" name="descripcion" maxlength="64" required>
+            <label for="descripcion">Descripción:</label>
+            <input type="text" id="descripcion" name="descripcion" maxlength="64" required>
 
-        <button type="submit">Insertar Mantenimiento</button>
-    </form>
-</div>
+            <div class="button-container">
+                <a href="{{ url_for('vehiculo', id=vehiculo['placa']) }}" class="btn cancel-btn">Cancelar</a>
+                <button type="submit" class="btn insert-btn">Insertar Mantenimiento</button>
+            </div>
+        </form>
+    </div>
 
 </body>
+
 </html>

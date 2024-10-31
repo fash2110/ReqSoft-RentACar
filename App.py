@@ -604,6 +604,29 @@ def modificar_mantenimiento(id):
             connection.close()
 
 
+@app.route('/vehiculo/eliminar_alquiler', methods=['POST'])
+def eliminar_alquiler():
+    fecha_inicio = request.form['id_alquiler']
+
+    try:
+        # Conexión con la base de datos
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Ejecuta la consulta para eliminar el alquiler usando la fecha de inicio como identificador
+        cursor.execute("DELETE FROM Alquileres WHERE fechaInicio = ?", (fecha_inicio,))
+        connection.commit()
+
+        flash('El alquiler ha sido eliminado con éxito.')
+
+        # Redireccionar de vuelta a la pantalla del vehículo
+        return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
+    except Exception as e:
+        flash(f"Error al eliminar el alquiler: {str(e)}")
+        return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
+    finally:
+        if 'connection' in locals() and connection:
+            connection.close()
 
 if __name__ == '__main__':
     app.run(debug=True)

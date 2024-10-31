@@ -152,6 +152,27 @@
             color: #3E0063;
         }
 
+        /* Estilos para la celda de acciones */
+        .actions-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Espacio entre los iconos */
+        }
+
+        .actions-cell a,
+        .actions-cell button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #3E0063; /* Color morado */
+            font-size: 24px;
+        }
+
+        .actions-cell a:hover i,
+        .actions-cell button:hover i {
+            color: #5A007A; /* Un tono ligeramente más claro al pasar el cursor */
+        }
         /* Estilos para el modal */
         .modal {
             display: none; /* Oculto por defecto */
@@ -270,6 +291,7 @@
                 <th>Fecha Fin</th>
                 <th>Cliente</th>
                 <th>Total</th>
+                <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -279,6 +301,14 @@
                 <td>{{ alquiler[2] }}</td> <!-- Fecha Fin -->
                 <td>{{ alquiler[3] }}</td> <!-- Cliente -->
                 <td>{{ alquiler[4] }}</td> <!-- Total Monto -->
+                <td class="actions-cell">
+                    <!-- Botón de modificar -->
+                    <i class="material-icons" title="Modificar Alquiler">edit</i>
+                    <!-- Botón de eliminar con modal -->
+                    <button type="button" onclick="openDeleteAlquilerModal('{{ alquiler[3] }}', '{{ alquiler[1] }}')">
+                        <i class="material-icons" title="Eliminar Alquiler">delete</i>
+                    </button>
+                </td>
             </tr>
             {% endfor %}
             </tbody>
@@ -287,9 +317,20 @@
             <a href="{{ url_for('mostrar_formulario_alquiler', id=vehiculo.placa) }}">
                 <i class="material-icons" title="Añadir Alquiler">add</i>
             </a>
-            <i class="material-icons" title="Modificar Alquiler">edit</i>
-            <i class="material-icons" title="Eliminar Alquiler">delete</i>
 
+        </div>
+    </div>
+
+    <!-- Modal de ELIMINAR ALQUILER -->
+    <div id="deleteAlquilerModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>¿Seguro de eliminar el alquiler del cliente <span id="alquilerDescription"></span>?</h2>
+            <p>Una vez eliminado, desaparecerá de la base de datos</p>
+            <form id="deleteAlquilerForm" action="{{ url_for('eliminar_alquiler') }}" method="POST">
+                <input type="hidden" name="id_alquiler" id="idAlquiler">
+                <button type="button" class="cancel-btn" onclick="closeDeleteAlquilerModal()">Cancelar</button>
+                <button type="submit" class="delete-btn">Eliminar</button>
+            </form>
         </div>
     </div>
 
@@ -310,13 +351,13 @@
                 <td>{{ mantenimiento[2] }}</td> <!-- Fecha -->
                 <td>{{ mantenimiento[4] }}</td> <!-- Descripción -->
                 <td>{{ mantenimiento[3] }}</td> <!-- Monto -->
-                <td>
+                <td class="actions-cell">
                     <!-- Botón de modificar -->
                     <a href="{{ url_for('modificar_mantenimiento', id=mantenimiento.id) }}">
                         <i class="material-icons" title="Modificar Mantenimiento">edit</i>
                     </a>
                     <!-- Botón de eliminar con modal -->
-                    <button type="button" onclick="openDeleteModal('{{ mantenimiento.Descripcion }}', '{{ mantenimiento.id }}')" style="background: none; border: none; cursor: pointer;">
+                    <button type="button" onclick="openDeleteModal('{{ mantenimiento.Descripcion }}', '{{ mantenimiento.id }}')">
                         <i class="material-icons" title="Eliminar Mantenimiento">delete</i>
                     </button>
                 </td>
@@ -328,16 +369,14 @@
             <a href="{{ url_for('mostrar_formulario_mantenimiento', id=vehiculo.placa) }}">
                 <i class="material-icons" title="Añadir Mantenimiento">add</i>
             </a>
-            <i class="material-icons" title="Modificar Mantenimiento">edit</i>
-            <i class="material-icons" title="Eliminar Mantenimiento">delete</i>
         </div>
     </div>
 
     <!-- Modal de ELIMINAR MANTENIMIENTO -->
     <div id="deleteMaintenanceModal" class="modal" style="display: none;">
         <div class="modal-content">
-            <h2>¿Seguro de eliminar el mantenimiento de la descripción "<span id="maintenanceDescription"></span>"?</h2>
-            <p>Una vez eliminado, no se podrá recuperar este mantenimiento.</p>
+            <h2>¿Seguro de eliminar el mantenimiento seleccionado <span id="maintenanceDescription"></span>?</h2>
+            <p>Una vez eliminado, desaparecerá de la base de datos</p>
             <form id="deleteMaintenanceForm" action="{{ url_for('eliminar_mantenimiento') }}" method="POST">
                 <input type="hidden" name="id_mantenimiento" id="idMantenimiento">
                 <button type="button" class="cancel-btn" onclick="closeDeleteModal()">Cancelar</button>
@@ -366,6 +405,16 @@
     }
     function closeModal() {
         document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // ELIMINAR ALQUILER
+    function openDeleteAlquilerModal(cliente, fechaInicio) {
+        document.getElementById('alquilerDescription').textContent = cliente;
+        document.getElementById('idAlquiler').value = fechaInicio;
+        document.getElementById('deleteAlquilerModal').style.display = 'flex';
+    }
+    function closeDeleteAlquilerModal() {
+        document.getElementById('deleteAlquilerModal').style.display = 'none';
     }
 
     // ELIMINAR MANTENIMIENTO
