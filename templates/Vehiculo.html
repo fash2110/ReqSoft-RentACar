@@ -301,6 +301,7 @@
                 <th>Fecha</th>
                 <th>Descripcion</th>
                 <th>Monto</th>
+                <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -309,6 +310,16 @@
                 <td>{{ mantenimiento[2] }}</td> <!-- Fecha -->
                 <td>{{ mantenimiento[4] }}</td> <!-- Descripción -->
                 <td>{{ mantenimiento[3] }}</td> <!-- Monto -->
+                <td>
+                    <!-- Botón de modificar -->
+                    <a href="{{ url_for('modificar_mantenimiento', id=mantenimiento.id) }}">
+                        <i class="material-icons" title="Modificar Mantenimiento">edit</i>
+                    </a>
+                    <!-- Botón de eliminar con modal -->
+                    <button type="button" onclick="openDeleteModal('{{ mantenimiento.Descripcion }}', '{{ mantenimiento.id }}')" style="background: none; border: none; cursor: pointer;">
+                        <i class="material-icons" title="Eliminar Mantenimiento">delete</i>
+                    </button>
+                </td>
             </tr>
             {% endfor %}
             </tbody>
@@ -322,10 +333,23 @@
         </div>
     </div>
 
+    <!-- Modal de ELIMINAR MANTENIMIENTO -->
+    <div id="deleteMaintenanceModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>¿Seguro de eliminar el mantenimiento de la descripción "<span id="maintenanceDescription"></span>"?</h2>
+            <p>Una vez eliminado, no se podrá recuperar este mantenimiento.</p>
+            <form id="deleteMaintenanceForm" action="{{ url_for('eliminar_mantenimiento') }}" method="POST">
+                <input type="hidden" name="id_mantenimiento" id="idMantenimiento">
+                <button type="button" class="cancel-btn" onclick="closeDeleteModal()">Cancelar</button>
+                <button type="submit" class="delete-btn">Eliminar</button>
+            </form>
+        </div>
+    </div>
 
 </div>
 
 <script>
+    // BARRA
     function showTab(tabId) {
         const tabs = document.querySelectorAll('.tab-content');
         tabs.forEach(tab => tab.classList.remove('active'));
@@ -336,12 +360,22 @@
         event.target.classList.add('active');
     }
 
+    // ELIMINAR VEHICULO
     function openModal() {
         document.getElementById('deleteModal').style.display = 'flex';
     }
-
     function closeModal() {
         document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    // ELIMINAR MANTENIMIENTO
+    function openDeleteModal(description, id) {
+        document.getElementById('maintenanceDescription').textContent = description;
+        document.getElementById('idMantenimiento').value = id;
+        document.getElementById('deleteMaintenanceModal').style.display = 'flex';
+    }
+    function closeDeleteModal() {
+        document.getElementById('deleteMaintenanceModal').style.display = 'none';
     }
 </script>
 

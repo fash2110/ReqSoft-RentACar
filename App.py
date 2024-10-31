@@ -529,6 +529,32 @@ def insertar_mantenimiento():
     finally:
         connection.close()
 
+@app.route('/vehiculo/eliminar_mantenimiento', methods=['POST'])
+def eliminar_mantenimiento():
+    id_mantenimiento = request.form['id_mantenimiento']
+
+    try:
+        # Conexión con la base de datos
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Ejecuta el SP para eliminar el mantenimiento
+        cursor.execute("EXEC EliminarMantenimiento @inidmantenimiento=?", (id_mantenimiento,))
+        connection.commit()
+
+        flash("Mantenimiento eliminado exitosamente.")
+    except Exception as e:
+        flash(str(e))
+    finally:
+        connection.close()
+
+    # Redirigir de nuevo a la vista del vehículo actual
+    return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
+
+@app.route('/vehiculo/modificar_mantenimiento/<id>', methods=['GET', 'POST'])
+def modificar_mantenimiento(id):
+    return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
