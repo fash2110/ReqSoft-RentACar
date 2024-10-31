@@ -303,7 +303,9 @@
                 <td>{{ alquiler[4] }}</td> <!-- Total Monto -->
                 <td class="actions-cell">
                     <!-- Botón de modificar -->
-                    <i class="material-icons" title="Modificar Alquiler">edit</i>
+                    <a href="{{ url_for('modificar_alquiler', alquiler_id=alquiler[1]) }}">
+                        <i class="material-icons" title="Modificar Alquiler">edit</i>
+                    </a>
                     <!-- Botón de eliminar con modal -->
                     <button type="button" onclick="openDeleteAlquilerModal('{{ alquiler[3] }}', '{{ alquiler[1] }}')">
                         <i class="material-icons" title="Eliminar Alquiler">delete</i>

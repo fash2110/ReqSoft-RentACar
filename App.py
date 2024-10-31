@@ -76,9 +76,58 @@ def Inicio():
         return redirect(url_for('form'))
 
 # RUTAS DE INICIO
-@app.route('/ingresar')
-def IngresarVehiculo():
-    return render_template('IngresarVehiculo.html', usuario=session['usuario'])
+@app.route('/ingresar_vehiculo', methods=['GET', 'POST'])
+def ingresar_vehiculo():
+    try:
+        # Conexión con la base de datos
+        connection = get_connection()
+        cursor = connection.cursor()
+
+        # Cargar datos desde las tablas de referencia
+        cursor.execute("SELECT id, nombre FROM Tipos")
+        tipos = cursor.fetchall()
+
+        cursor.execute("SELECT id, nombre FROM Combustibles")
+        combustibles = cursor.fetchall()
+
+        cursor.execute("SELECT id, nombre FROM Transmision")
+        transmisiones = cursor.fetchall()
+
+        cursor.execute("SELECT id, nombre FROM Estados")
+        estados = cursor.fetchall()
+
+        if request.method == 'POST':
+            placa = request.form['placa']
+            modelo = request.form['modelo']
+            marca = request.form['marca']
+            anno = request.form['anno']
+            color = request.form['color']
+            id_tipo = request.form['tipo']
+            id_combustible = request.form['combustible']
+            id_transmision = request.form['transmision']
+            id_estado = request.form['estado']
+            descripcion = request.form['descripcion']
+
+            # Insertar el vehículo
+            cursor.execute("""
+                INSERT INTO Vehiculos (placa, modelo, marca, anno, color, idTipo, idCombustible, idTransmision, idEstado, descripcion)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (placa, modelo, marca, anno, color, id_tipo, id_combustible, id_transmision, id_estado, descripcion))
+            connection.commit()
+
+            flash('Vehículo ingresado con éxito.')
+            return redirect(url_for('Inicio'))
+
+        return render_template('IngresarVehiculo.html', tipos=tipos, combustibles=combustibles, transmisiones=transmisiones, estados=estados)
+
+    except Exception as e:
+        flash(f"Error al cargar los datos: {str(e)}")
+        return redirect(url_for('Inicio'))
+    finally:
+        if 'connection' in locals():
+            connection.close()
+
+
 
 
 @app.route('/detalles/<id>')
@@ -395,103 +444,56 @@ def insertar_alquiler():
         connection.close()
 
 
-@app.route('/vehiculo/<id>/modificar_alquiler', methods=['GET'])
-def seleccionar_alquiler_para_modificar(id):
+@app.route('/vehiculo/modificar_alquiler/<alquiler_id>', methods=['GET', 'POST'])
+def modificar_alquiler(alquiler_id):
     try:
-        # Conexión a la base de datos
+        # Conexión con la base de datos
         connection = get_connection()
         cursor = connection.cursor()
 
-        # Obtener todos los alquileres del vehículo específico
-        cursor.execute("SELECT id, idVehiculo, fechaInicio, fechaFin, cliente, monto FROM Alquileres WHERE idVehiculo = ?", (id,))
-        alquileres = cursor.fetchall()
+        if request.method == 'POST':
+            # Obtener los datos del formulario
+            placa = request.form['placa']
+            fecha_inicio_str = request.form['fechaInicio']
+            fecha_fin_str = request.form['fechaFin']
+            cliente = request.form['cliente']
+            monto = request.form['monto']
 
-        if not alquileres:
-            flash('Este vehículo no tiene alquileres para modificar.')
-            return redirect(url_for('vehiculo', id=id))
+            try:
+                # Convertir las fechas de string a datetime en un formato compatible con SQL Server
+                fecha_inicio = datetime.strptime(fecha_inicio_str, "%Y-%m-%dT%H:%M")
+                fecha_fin = datetime.strptime(fecha_fin_str, "%Y-%m-%dT%H:%M")
+            except ValueError as ve:
+                flash(f"Formato de fecha inválido: {str(ve)}")
+                return redirect(url_for('vehiculo', id=placa))
 
-        return render_template('ModificarAlquiler.html', alquileres=alquileres, vehiculo_id=id)
-    except Exception as e:
-        flash(str(e))
-        return redirect(url_for('vehiculo', id=id))
-    finally:
-        connection.close()
-
-@app.route('/modificar_alquiler/<int:alquiler_id>', methods=['GET', 'POST'])
-def modificar_alquiler(alquiler_id):
-    if request.method == 'POST':
-        # Procesar la modificación del alquiler
-        fechaInicio = request.form['fechaInicio']
-        fechaFin = request.form['fechaFin']
-        cliente = request.form['cliente']
-        monto = request.form['monto']
-        idVehiculo = request.form['idVehiculo']
-
-        try:
-            # Convertir fechas al formato adecuado
-            fechaInicio_dt = datetime.strptime(fechaInicio, '%Y-%m-%dT%H:%M')
-            fechaFin_dt = datetime.strptime(fechaFin, '%Y-%m-%dT%H:%M')
-
-            connection = get_connection()
-            cursor = connection.cursor()
-
-            # Llamar al procedimiento almacenado para modificar el alquiler
+            # Ejecutar la consulta de modificación usando SQL incrustado
             cursor.execute("""
-                EXEC ModificarAlquiler
-                    @inidalquiler=?,
-                    @inidVehiculo=?,
-                    @infechaInicio=?,
-                    @infechaFin=?,
-                    @incliente=?,
-                    @inmonto=?
-            """, (
-                alquiler_id,
-                idVehiculo,  # idVehiculo
-                fechaInicio_dt,
-                fechaFin_dt,
-                cliente,
-                monto
-            ))
-
+                UPDATE Alquileres
+                SET idVehiculo = ?, fechaInicio = ?, fechaFin = ?, cliente = ?, monto = ?
+                WHERE fechaInicio = ? AND idVehiculo = ?
+            """, (placa, fecha_inicio, fecha_fin, cliente, monto, alquiler_id, placa))
             connection.commit()
-            flash('Alquiler modificado exitosamente.')
-            return redirect(url_for('vehiculo', id=idVehiculo))
-        except Exception as e:
-            connection.rollback()
-            flash('Error al modificar el alquiler: {}'.format(str(e)))
-            return redirect(url_for('modificar_alquiler', alquiler_id=alquiler_id))
-        finally:
-            connection.close()
-    else:
-        # Mostrar el formulario con los datos del alquiler a modificar
-        try:
-            connection = get_connection()
-            cursor = connection.cursor()
 
-            # Obtener los datos del alquiler
-            cursor.execute("SELECT id, idVehiculo, fechaInicio, fechaFin, cliente, monto FROM Alquileres WHERE id = ?", (alquiler_id,))
-            row = cursor.fetchone()
+            flash('El alquiler ha sido modificado con éxito.')
+            return redirect(url_for('vehiculo', id=placa))
 
-            if row:
-                alquiler = {
-                    'id': row[0],
-                    'idVehiculo': row[1],
-                    'fechaInicio': row[2],
-                    'fechaFin': row[3],
-                    'cliente': row[4],
-                    'monto': row[5],
-                    'fechaInicio_formatted': row[2].strftime('%Y-%m-%dT%H:%M'),
-                    'fechaFin_formatted': row[3].strftime('%Y-%m-%dT%H:%M')
-                }
-                return render_template('ModificarAlquiler.html', alquiler=alquiler)
-            else:
-                flash('No se encontró el alquiler especificado.')
-                return redirect(url_for('Inicio'))
-        except Exception as e:
-            flash(str(e))
-            return redirect(url_for('Inicio'))
-        finally:
+        cursor.execute("SELECT * FROM Alquileres WHERE fechaInicio = ?", (alquiler_id,))
+        alquiler = cursor.fetchone()
+
+        if not alquiler:
+            flash('No se encontró el alquiler.')
+            return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
+
+        return render_template('ModificarAlquiler.html', alquiler=alquiler)
+
+    except Exception as e:
+        flash(f"Error al modificar el alquiler: {str(e)}")
+        return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
+    finally:
+        if 'connection' in locals() and connection:
             connection.close()
+
 
 
 # Ruta para mostrar el formulario de inserción de mantenimiento
