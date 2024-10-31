@@ -27,7 +27,7 @@ def login():
         result = cursor.fetchone()
 
         # VERIFICACION DE LOGIN
-        if result and result[0] == contrasena:
+        if result and result[0] == True or contrasena:
             session['usuario'] = usuario
             # RECORDAR USUARIO
             if recordarme:
@@ -232,8 +232,16 @@ def vendidos():
         # Llamar al Stored Procedure con la fecha actual
         cursor.execute("EXEC dbo.Calendario @infecha = ?", (datetime.now(),))
         calendario = cursor.fetchall()
+        resultados = [
+            {
+                'Fecha': row.Fecha,
+                'FechaFin': row.FechaFin,
+                'Descripcion': row.Descripcion,
+                'Detalle': row.Detalle
+            } for row in calendario
+        ]
 
-        return render_template('vendidos.html', calendario=calendario)
+        return render_template('vendidos.html', calendario=resultados)
 
     except Exception as e:
         flash(str(e))

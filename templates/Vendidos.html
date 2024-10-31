@@ -62,7 +62,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Fecha</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
                         <th>Descripción</th>
                         <th>Detalle</th>
                     </tr>
@@ -71,6 +72,7 @@
                     {% for evento in calendario %}
                     <tr>
                         <td>{{ evento.Fecha }}</td> <!-- Columna Fecha -->
+                        <td>{{ evento.FechaFin }}</td>
                         <td>{{ evento.Descripcion }}</td> <!-- Columna Tipo de Evento (Alquiler, Mantenimiento, etc.) -->
                         <td>{{ evento.Detalle }}</td> <!-- Detalle del evento -->
                     </tr>
