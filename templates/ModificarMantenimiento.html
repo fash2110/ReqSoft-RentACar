@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Mantenimiento</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3E0063;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #3E0063;
+        }
+
+        input[type="text"],
+        input[type="datetime-local"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="text"]:read-only {
+            background-color: #f0f0f0;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .button-container a,
+        .button-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cancel-btn {
+            background-color: #f0f0f0;
+            color: #3E0063;
+            text-align: center;
+        }
+
+        .cancel-btn:hover {
+            background-color: #ddd;
+        }
+
+        .submit-btn {
+            background-color: #3E0063;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background-color: #5A007A;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Modificar Mantenimiento</h1>
+        <form action="{{ url_for('modificar_mantenimiento', id=mantenimiento.id) }}" method="POST">
+            <div class="form-group">
+                <label for="placa">Placa del Vehículo</label>
+                <input type="text" id="placa" name="placa" value="{{ mantenimiento.idVehiculo }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="fecha">Fecha del Mantenimiento</label>
+                <input type="datetime-local" id="fecha" name="fecha" value="{{ mantenimiento.fecha }}">
+            </div>
+            <div class="form-group">
+                <label for="monto">Monto</label>
+                <input type="number" id="monto" name="monto" value="{{ mantenimiento.monto }}" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="descripcion">Descripción</label>
+                <input type="text" id="descripcion" name="descripcion" value="{{ mantenimiento.descripcion }}">
+            </div>
+            <div class="button-container">
+                <a href="{{ url_for('vehiculo', id=mantenimiento.idVehiculo) }}" class="cancel-btn">Cancelar</a>
+                <button type="submit" class="submit-btn">Modificar</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

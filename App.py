@@ -551,9 +551,58 @@ def eliminar_mantenimiento():
     # Redirigir de nuevo a la vista del vehículo actual
     return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
 
-@app.route('/vehiculo/modificar_mantenimiento/<id>', methods=['GET', 'POST'])
+@app.route('/vehiculo/modificar_mantenimiento/<int:id>', methods=['GET', 'POST'])
 def modificar_mantenimiento(id):
-    return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
+    if request.method == 'POST':
+        # Datos del formulario
+        fecha_str = request.form['fecha']
+        monto = request.form['monto']
+        descripcion = request.form['descripcion']
+        placa = request.form['placa']
+
+        try:
+            # Convertir la fecha a un objeto datetime
+            fecha = datetime.strptime(fecha_str, '%Y-%m-%dT%H:%M')
+
+            # Conexión a la base de datos
+            connection = get_connection()
+            cursor = connection.cursor()
+
+            # Ejecutar el SP para modificar el mantenimiento
+            cursor.execute(
+                "EXEC ModificarMantenimiento @inidmantenimiento=?, @inidVehiculo=?, @infecha=?, @inmonto=?, @indescripcion=?",
+                (id, placa, fecha, monto, descripcion)
+            )
+            connection.commit()
+
+            flash("Mantenimiento modificado exitosamente.")
+            return redirect(url_for('vehiculo', id=placa))
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('modificar_mantenimiento', id=id))
+        finally:
+            connection.close()
+    else:
+        try:
+            # Conexión a la base de datos
+            connection = get_connection()
+            cursor = connection.cursor()
+
+            # Consultar el mantenimiento por ID
+            cursor.execute("SELECT * FROM Mantenimientos WHERE id = ?", (id,))
+            mantenimiento = cursor.fetchone()
+
+            if not mantenimiento:
+                flash('No se encontraron detalles para este mantenimiento.')
+                return redirect(url_for('Inicio'))
+
+            return render_template('ModificarMantenimiento.html', mantenimiento=mantenimiento)
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('Inicio'))
+        finally:
+            connection.close()
+
 
 
 if __name__ == '__main__':
