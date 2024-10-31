@@ -78,7 +78,7 @@ def Inicio():
 # RUTAS DE INICIO
 @app.route('/ingresar')
 def IngresarVehiculo():
-    return render_template('Inicio.html', usuario=session['usuario'])
+    return render_template('IngresarVehiculo.html', usuario=session['usuario'])
 
 
 @app.route('/detalles/<id>')
