@@ -171,6 +171,8 @@ def modificar_vehiculo(id):
             connection = get_connection()
             cursor = connection.cursor()
 
+            print('SE CONECTÓ AL ORIGINAL)')
+
             # LLAMADO AL STORED PROCEDURE
             cursor.execute("""
                 EXEC dbo.ModificarVehiculo
@@ -628,6 +630,69 @@ def eliminar_alquiler():
         return redirect(url_for('vehiculo', id=session.get('vehiculo_id')))
     finally:
         if 'connection' in locals() and connection:
+            connection.close()
+
+@app.route('/modificar/<id>', methods=['GET', 'POST'])
+def modificar_vehiculo_inicio(id):
+    if request.method == 'POST':
+
+        # DATOS DE LA APLICACION
+        color = request.form['color']
+        idTipo = request.form['idTipo']
+        idCombustible = request.form['idCombustible']
+        idTransmision = request.form['idTransmision']
+        idEstado = request.form['idEstado']
+        descripcion = request.form['descripcion']
+
+        try:
+
+            # CONEXION CON BASE DE DATOS
+            connection = get_connection()
+            cursor = connection.cursor()
+
+            print('SE COMECTÓ A AL DE INICIO')
+
+            # LLAMADO AL STORED PROCEDURE
+            cursor.execute("""
+                EXEC dbo.ModificarVehiculo
+                    @inplaca=?,
+                    @inmodelo=?,
+                    @inmarca=?,
+                    @inanno=?,
+                    @incolor=?,
+                    @inidTipo=?,
+                    @inidCombustible=?,
+                    @inidTransmision=?,
+                    @inidEstado=?,
+                    @indescripcion=?
+            """, (id, None, None, None, color, idTipo, idCombustible, idTransmision, idEstado, descripcion))
+
+            connection.commit()
+
+            return redirect(url_for('Inicio'))
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('Inicio'))
+        finally:
+            connection.close()
+    else:
+        try:
+
+            # CONEXION CON BASE DE DATOS
+            connection = get_connection()
+            cursor = connection.cursor()
+            cursor.execute("EXEC dbo.ConsultaVehiculo ?", (id,))
+            vehiculo = cursor.fetchone()
+
+            if vehiculo:
+                return redirect(url_for('Inicio'))
+            else:
+                flash('No se encontraron detalles para este vehículo.')
+                return redirect(url_for('Inicio'))
+        except Exception as e:
+            flash(str(e))
+            return redirect(url_for('Inicio'))
+        finally:
             connection.close()
 
 if __name__ == '__main__':

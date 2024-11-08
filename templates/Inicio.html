@@ -102,6 +102,61 @@
             font-size: 14px;
             color: #999;
         }
+        .vehicle-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .vehicle-actions .material-icons {
+            cursor: pointer;
+            color: #3e0063;
+        }
+
+        .vehicle-actions .material-icons:hover {
+            color: #5a007a;
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: none; /* Oculto por defecto */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .cancel-btn, .delete-btn {
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .cancel-btn {
+            background-color: #ccc;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: #fff;
+        }
+
     </style>
 </head>
 <body>
@@ -125,15 +180,43 @@
                     <div>
                         <!-- Enlace que redirige a la página de detalles del vehículo pasando la placa como parámetro -->
                         <h4><a href="{{ url_for('vehiculo', id=vehiculo[0]) }}">{{ vehiculo[2] }} {{ vehiculo[1] }}</a></h4> <!-- Marca y modelo -->
+                        <div class="vehicle-actions">
+                        <!-- Botón de Modificar -->
+                        <!-- Botón de Modificar -->
+                        <a href="{{ url_for('modificar_vehiculo_inicio', id=vehiculo[0]) }}">
+                            <i class="material-icons" title="Modificar Vehículo">edit</i>
+                        </a>
+                        <!-- Botón de Eliminar -->
+                        <button type="button" onclick="openModal('{{ vehiculo[0] }}')" style="background: none; border: none; cursor: pointer;">
+                            <i class="material-icons" title="Eliminar Vehículo">delete</i>
+                        </button>                        </div>
                         <p>{{ vehiculo[9] }}</p> <!-- Estado o descripción -->
                     </div>
                 </div>
                 <i class="material-icons">chevron_right</i>
             </div>
+                <!-- Modal de ELIMINAR para este vehículo -->
+            <div id="deleteModal{{ vehiculo[0] }}" class="modal">
+                <div class="modal-content">
+                    <h2>¿Seguro de eliminar el vehículo de placa {{ vehiculo[0] }}?</h2>
+                    <p>Una vez eliminado, deberá contactar soporte para recuperar este vehículo.</p>
+                    <form action="{{ url_for('eliminar_vehiculo', id=vehiculo[0]) }}" method="POST">
+                        <button type="button" class="cancel-btn" onclick="closeModal('{{ vehiculo[0] }}')">Cancelar</button>
+                        <button type="submit" class="delete-btn">Eliminar</button>
+                    </form>
+                </div>
+            </div>
             {% endfor %}
         </section>
     </main>
 </div>
-
+<script>
+    function openModal(id) {
+        document.getElementById('deleteModal' + id).style.display = 'flex';
+    }
+    function closeModal(id) {
+        document.getElementById('deleteModal' + id).style.display = 'none';
+    }
+</script>
 </body>
 </html>
